@@ -1,0 +1,15 @@
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.vscode/ipch/
+.vscode/*.db
+.vscode/*.db-shm
+.vscode/*.db-wal
+
+.clangd/
+
+compile_commands.json
+clang-crash-*
+
+build/
