@@ -3,6 +3,8 @@
 #include "led_microbit.h"
 #include "time_microbit.h"
 
+void blink_main();
+
 void led_set(int row, int col, LedState state);
 void led_blink(int row, int col);
 void led_blink_test();
