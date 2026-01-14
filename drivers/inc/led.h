@@ -13,4 +13,4 @@ void show_error();
 void set_row(int row, LedState state);
 void set_col(int col, LedState state);
 
-void show(int (*img)[5], int time);
+void show(const uint8_t* img, int time);

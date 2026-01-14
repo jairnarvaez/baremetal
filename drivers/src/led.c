@@ -6,6 +6,16 @@
 const uint8_t ROWS[] = { ROW1, ROW2, ROW3, ROW4, ROW5 };
 const uint8_t COLS[] = { COL1, COL2, COL3, COL4, COL5 };
 
+void* memcpy(void* dest, const void* src, size_t n)
+{
+    unsigned char* d = dest;
+    const unsigned char* s = src;
+    while (n--) {
+        *d++ = *s++;
+    }
+    return dest;
+}
+
 void error_blink()
 {
     while (1) {
@@ -89,50 +99,44 @@ void led_set(int row, int col, LedState state)
     }
 }
 
-void set_led(int row, int* cols, int size)
+void set_led(int row, uint8_t pattern)
 {
     if (row < 0 || row >= 5) {
         error_blink();
         return;
     }
-    GPIO0.OUT = 0;
-    GPIO1.OUT = 0;
 
-    uint32_t mask_col_on = 0;
     uint32_t mask_row = (1 << ROWS[row]);
+    uint32_t mask_cols_p0 = 0;
+    uint32_t mask_cols_p1 = 0;
 
-    for (int i = 0; i < size; i++) {
-        if (cols[i]) {
-            mask_col_on |= (1 << COLS[i]);
+    for (int i = 4; i >= 0; i--) {
+        if ((pattern >> i) & 1) {
+            if (i == 3) {
+                mask_cols_p1 |= (1 << COLS[i]);
+            } else {
+                mask_cols_p0 |= (1 << COLS[i]);
+            }
         }
     }
 
     GPIO0.OUTSET = _COL_MASK_GPIO0;
     GPIO1.OUTSET = _COL_MASK_GPIO1;
+    GPIO0.OUTCLR = _ROW_MASK_GPIO0;
 
     GPIO0.OUTSET = mask_row;
-    GPIO0.OUTCLR = mask_col_on;
 
-    if (cols[3]) {
-        GPIO1.OUTCLR = _COL_MASK_GPIO1;
-    }
+    if (mask_cols_p0)
+        GPIO0.OUTCLR = mask_cols_p0;
+    if (mask_cols_p1)
+        GPIO1.OUTCLR = mask_cols_p1;
 }
 
-void* memcpy(void* dest, const void* src, size_t n)
-{
-    unsigned char* d = dest;
-    const unsigned char* s = src;
-    while (n--) {
-        *d++ = *s++;
-    }
-    return dest;
-}
-
-void show(int (*img)[5], int time)
+void show(const uint8_t* img, int time)
 {
     for (int row = 0; row < time; row++) {
-        set_led(row % 5, img[row % 5], 5);
-        delay(1000);
+        set_led(row % 5, img[row % 5]);
+        delay(TIME);
     }
 }
 
