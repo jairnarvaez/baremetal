@@ -34,8 +34,9 @@ typedef enum {
 
 #define _SET(p) (1 << p)
 
-#define _ROW_MASK _SET(ROW1) | _SET(ROW2) | _SET(ROW3) | _SET(ROW4) | _SET(ROW5)
-#define _COL_MASK _SET(COL1) | _SET(COL2) | _SET(COL3) | _SET(COL5)
+#define _ROW_MASK_GPIO0 _SET(ROW1) | _SET(ROW2) | _SET(ROW3) | _SET(ROW4) | _SET(ROW5)
+#define _COL_MASK_GPIO0 _SET(COL1) | _SET(COL2) | _SET(COL3) | _SET(COL5)
+#define _COL_MASK_GPIO1 _SET(COL4)
 
 #define _ROW(row, c1, c2, c3, c4, c5) \
     _ROW_GPIO0(row, c1, c2, c3, c5), _ROW_GPIO1(c4)
