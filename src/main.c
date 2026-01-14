@@ -1,5 +1,4 @@
 #include "animations.h"
-#include <stdint.h>
 
 int main(void)
 {
