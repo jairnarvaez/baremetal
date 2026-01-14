@@ -71,31 +71,19 @@ void led_set(int row, int col, LedState state)
         return;
     }
 
-    uint8_t pin_row = ROWS[row];
-    uint8_t pin_col = COLS[col];
+    uint32_t mask_row = (1 << ROWS[row]);
+    uint32_t mask_col = (1 << COLS[col]);
+    volatile struct _gpio* puerto_col = (col == 3) ? &GPIO1 : &GPIO0;
 
-    GPIO0.DIRSET = (1 << pin_row);
+    GPIO0.DIRSET = mask_row;
+    puerto_col->DIRSET = mask_col;
 
-    if (pin_col == 37) {
-        GPIO1.DIRSET = (1 << 5);
-
-        if (state) {
-            GPIO0.OUTSET = (1 << pin_row);
-            GPIO1.OUTCLR = (1 << 5);
-        } else {
-            GPIO0.OUTCLR = (1 << pin_row);
-            GPIO1.OUTCLR = (1 << 5);
-        }
+    if (state) {
+        GPIO0.OUTSET = mask_row;
+        puerto_col->OUTCLR = mask_col;
     } else {
-        GPIO0.DIRSET = (1 << pin_col);
-
-        if (state) {
-            GPIO0.OUTSET = (1 << pin_row);
-            GPIO0.OUTCLR = (1 << pin_col);
-        } else {
-            GPIO0.OUTCLR = (1 << pin_row);
-            GPIO0.OUTCLR = (1 << pin_col);
-        }
+        GPIO0.OUTCLR = mask_row;
+        puerto_col->OUTSET = mask_col;
     }
 }
 
