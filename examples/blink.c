@@ -7,13 +7,14 @@ void error_blink()
 {
     while (1) {
         set_col(2, LED_ON);
-        delay(15000);
+        delay(TIME_ERROR);
         set_col(2, LED_OFF);
-        delay(15000);
+        delay(TIME_ERROR);
+
         set_row(2, LED_ON);
-        delay(15000);
+        delay(TIME_ERROR);
         set_row(2, LED_OFF);
-        delay(15000);
+        delay(TIME_ERROR);
     }
 }
 
