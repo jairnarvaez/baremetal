@@ -1,14 +1,14 @@
-#include "blink.h"
+#include "animations.h"
 
 #define TIME 100000
 
 int main(void)
 {
-    GPIO0.DIRCLR = LED_MASK0;
-    GPIO1.DIRCLR = LED_MASK1;
+    GPIO0.DIR = LED_MASK0;
+    GPIO1.DIR = LED_MASK1;
 
     // Implementacion de la matriz de leds
-    blink_main();
+    animation_arrow();
 
     return 0;
 }

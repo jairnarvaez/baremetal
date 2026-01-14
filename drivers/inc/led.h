@@ -1,7 +1,7 @@
 #include <stdint.h>
 
-#include "led_microbit.h"
-#include "time_microbit.h"
+#include "delay.h"
+#include "gpio.h"
 
 void blink_main();
 
@@ -12,3 +12,5 @@ void show_error();
 
 void set_row(int row, LedState state);
 void set_col(int col, LedState state);
+
+void show(int (*img)[5], int time);

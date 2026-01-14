@@ -1,5 +1,7 @@
-#include "blink.h"
+#include "led.h"
+
 #include <stdint.h>
+#include <string.h>
 
 const uint8_t ROWS[] = { ROW1, ROW2, ROW3, ROW4, ROW5 };
 const uint8_t COLS[] = { COL1, COL2, COL3, COL4, COL5 };
@@ -87,13 +89,63 @@ void led_set(int row, int col, LedState state)
     }
 }
 
+void set_led(int row, int* cols, int size)
+{
+    if (row < 0 || row >= 5) {
+        error_blink();
+        return;
+    }
+    GPIO0.OUT = 0;
+    GPIO1.OUT = 0;
+
+    uint32_t mask_col_on = 0;
+    uint32_t mask_row = (1 << ROWS[row]);
+
+    for (int i = 0; i < size; i++) {
+        if (cols[i]) {
+            mask_col_on |= (1 << COLS[i]);
+        }
+    }
+
+    GPIO0.OUTSET = _COL_MASK_GPIO0;
+    GPIO1.OUTSET = _COL_MASK_GPIO1;
+
+    GPIO0.OUTSET = mask_row;
+    GPIO0.OUTCLR = mask_col_on;
+
+    if (cols[3]) {
+        GPIO1.OUTCLR = _COL_MASK_GPIO1;
+    }
+}
+
+void* memcpy(void* dest, const void* src, size_t n)
+{
+    unsigned char* d = dest;
+    const unsigned char* s = src;
+    while (n--) {
+        *d++ = *s++;
+    }
+    return dest;
+}
+
+void show(int (*img)[5], int time)
+{
+    for (int row = 0; row < time; row++) {
+        set_led(row % 5, img[row % 5], 5);
+        delay(1000);
+    }
+}
+
+void* memset(void* s, int c, size_t n)
+{
+    unsigned char* p = s;
+    while (n--)
+        *p++ = (unsigned char)c;
+    return s;
+}
+
 void blink_main()
 {
     for (;;) {
-        for (int i = 0; i < 5; i++) {
-            set_row(i, LED_ON);
-            delay(50000);
-            set_row(i, LED_OFF);
-        }
     }
 }
