@@ -1,186 +1,88 @@
 #include "animations.h"
+#include <stdint.h>
 
-void animation_star()
+const uint8_t PACMAN_OPEN[] = { 0x0E, 0x1C, 0x19, 0x1C, 0x0E };
+const uint8_t PACMAN_CLOSED[] = { 0x0E, 0x1E, 0x1F, 0x1E, 0x0E };
+
+const uint8_t STAR_FULL[] = { 0x04, 0x0E, 0x1F, 0x1E, 0x04 };
+const uint8_t STAR_MEDIUM[] = { 0x00, 0x04, 0x0E, 0x04, 0x00 };
+const uint8_t STAR_SMALL[] = { 0x00, 0x00, 0x04, 0x00, 0x00 };
+
+const uint8_t ARROW_UP[] = { 0x04, 0x0E, 0x15, 0x04, 0x04 };
+const uint8_t ARROW_RIGHT[] = { 0x04, 0x02, 0x1F, 0x02, 0x04 };
+const uint8_t ARROW_DOWN[] = { 0x04, 0x04, 0x15, 0x0E, 0x04 };
+const uint8_t ARROW_LEFT[] = { 0x04, 0x08, 0x1F, 0x08, 0x04 };
+
+const uint8_t HEART_SMALL[] = { 0x00, 0x0A, 0x0E, 0x04, 0x00 };
+const uint8_t HEART_BIG[] = { 0x0A, 0x1F, 0x1F, 0x0E, 0x04 };
+
+const uint8_t SMILE[] = { 0x00, 0x0A, 0x00, 0x11, 0x0E };
+const uint8_t WINK[] = { 0x00, 0x08, 0x00, 0x11, 0x0E };
+
+// Otra definicion
+const uint8_t X_PATTERN[] = {
+    0b10001,
+    0b01010,
+    0b00100,
+    0b01010,
+    0b10001
+};
+
+const uint8_t PLUS_PATTERN[] = {
+    0b00100,
+    0b00100,
+    0b11111,
+    0b00100,
+    0b00100
+};
+
+void animation_star(uint32_t time, uint32_t repetitions)
 {
-    int star_full[5][5] = {
-        { 0, 0, 1, 0, 0 },
-        { 0, 1, 1, 1, 0 },
-        { 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 0 },
-        { 0, 0, 1, 0, 0 }
-    };
-
-    int star_medium[5][5] = {
-        { 0, 0, 0, 0, 0 },
-        { 0, 0, 1, 0, 0 },
-        { 0, 1, 1, 1, 0 },
-        { 0, 0, 1, 0, 0 },
-        { 0, 0, 0, 0, 0 }
-    };
-
-    int star_small[5][5] = {
-        { 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0 },
-        { 0, 0, 1, 0, 0 },
-        { 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0 }
-    };
-
-    // Brillar 3 veces
-    for (int i = 0; i < 3; i++) {
-        show(star_small, 30);
-        show(star_medium, 30);
-        show(star_full, 50);
-        show(star_medium, 30);
-        show(star_small, 30);
+    for (int i = 0; i < repetitions; i++) {
+        show(STAR_SMALL, time);
+        show(STAR_MEDIUM, time);
+        show(STAR_FULL, time);
     }
 }
 
-void animation_pacman()
+void animation_pacman(uint32_t time, uint32_t repetitions)
 {
-    int pacman_open[5][5] = {
-        { 0, 1, 1, 1, 0 },
-        { 1, 1, 1, 0, 0 },
-        { 1, 1, 0, 0, 1 },
-        { 1, 1, 1, 0, 0 },
-        { 0, 1, 1, 1, 0 }
-    };
-
-    int pacman_closed[5][5] = {
-        { 0, 1, 1, 1, 0 },
-        { 1, 1, 1, 1, 0 },
-        { 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 0 },
-        { 0, 1, 1, 1, 0 }
-    };
-
-    for (int i = 0; i < 5; i++) {
-        show(pacman_open, 400);
-        show(pacman_closed, 400);
+    for (int i = 0; i < repetitions; i++) {
+        show(PACMAN_OPEN, time);
+        show(PACMAN_CLOSED, time);
     }
 }
 
-void animation_x_rotate()
+void animation_x_rotate(uint32_t time, uint32_t repetitions)
 {
-    int x_pattern[5][5] = {
-        { 1, 0, 0, 0, 1 },
-        { 0, 1, 0, 1, 0 },
-        { 0, 0, 1, 0, 0 },
-        { 0, 1, 0, 1, 0 },
-        { 1, 0, 0, 0, 1 }
-    };
-
-    int plus_pattern[5][5] = {
-        { 0, 0, 1, 0, 0 },
-        { 0, 0, 1, 0, 0 },
-        { 1, 1, 1, 1, 1 },
-        { 0, 0, 1, 0, 0 },
-        { 0, 0, 1, 0, 0 }
-    };
-
-    for (int i = 0; i < 4; i++) {
-        show(x_pattern, 150);
-        show(plus_pattern, 150);
+    for (int i = 0; i < repetitions; i++) {
+        show(X_PATTERN, time);
+        show(PLUS_PATTERN, time);
     }
 }
 
-void animation_heart()
+void animation_heart(uint32_t time, uint32_t repetitions)
 {
-    int heart_small[5][5] = {
-        { 0, 0, 0, 0, 0 },
-        { 0, 1, 0, 1, 0 },
-        { 0, 1, 1, 1, 0 },
-        { 0, 0, 1, 0, 0 },
-        { 0, 0, 0, 0, 0 }
-    };
-
-    int heart_big[5][5] = {
-        { 0, 1, 0, 1, 0 },
-        { 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 0 },
-        { 0, 0, 1, 0, 0 }
-    };
-
-    int center[5][5];
-
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-            center[i][j] = 0;
-        }
-    }
-
-    center[2][2] = 1;
-
-    show(heart_big, 750);
-    show(heart_small, 75);
-    show(center, 75);
-    show(heart_small, 75);
-}
-
-void animation_arrow()
-{
-    int arrow_up[5][5] = {
-        { 0, 0, 1, 0, 0 },
-        { 0, 1, 1, 1, 0 },
-        { 1, 0, 1, 0, 1 },
-        { 0, 0, 1, 0, 0 },
-        { 0, 0, 1, 0, 0 }
-    };
-
-    int arrow_right[5][5] = {
-        { 0, 0, 1, 0, 0 },
-        { 0, 0, 0, 1, 0 },
-        { 1, 1, 1, 1, 1 },
-        { 0, 0, 0, 1, 0 },
-        { 0, 0, 1, 0, 0 }
-    };
-
-    int arrow_down[5][5] = {
-        { 0, 0, 1, 0, 0 },
-        { 0, 0, 1, 0, 0 },
-        { 1, 0, 1, 0, 1 },
-        { 0, 1, 1, 1, 0 },
-        { 0, 0, 1, 0, 0 }
-    };
-
-    int arrow_left[5][5] = {
-        { 0, 0, 1, 0, 0 },
-        { 0, 1, 0, 0, 0 },
-        { 1, 1, 1, 1, 1 },
-        { 0, 1, 0, 0, 0 },
-        { 0, 0, 1, 0, 0 }
-    };
-
-    for (int spin = 0; spin < 3; spin++) {
-        show(arrow_up, 175);
-        show(arrow_right, 1075);
-        show(arrow_down, 1075);
-        show(arrow_left, 1075);
+    for (int i = 0; i < repetitions; i++) {
+        show(HEART_SMALL, time);
+        show(HEART_BIG, time);
     }
 }
 
-void animation_smile()
+void animation_arrow(uint32_t time, uint32_t repetitions)
 {
-    int smile[5][5] = {
-        { 0, 0, 0, 0, 0 },
-        { 0, 1, 0, 1, 0 },
-        { 0, 0, 0, 0, 0 },
-        { 1, 0, 0, 0, 1 },
-        { 0, 1, 1, 1, 0 }
-    };
+    for (int i = 0; i < repetitions; i++) {
+        show(ARROW_UP, time);
+        show(ARROW_RIGHT, time);
+        show(ARROW_DOWN, time);
+        show(ARROW_LEFT, time);
+    }
+}
 
-    int wink[5][5] = {
-        { 0, 0, 0, 0, 0 },
-        { 0, 1, 0, 0, 0 },
-        { 0, 0, 0, 0, 0 },
-        { 1, 0, 0, 0, 1 },
-        { 0, 1, 1, 1, 0 }
-    };
-
-    show(smile, 100);
-    show(wink, 50);
-    show(smile, 100);
-    show(wink, 50);
-    show(smile, 100);
+void animation_smile(uint32_t time, uint32_t repetitions)
+{
+    for (int i = 0; i < repetitions; i++) {
+        show(SMILE, time);
+        show(WINK, time);
+    }
 }
