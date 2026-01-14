@@ -46,5 +46,3 @@ typedef enum {
 
 #define _ROW_GPIO1(c4) \
     ((!c4) << 5)
-
-#define TIME_ERROR 1500
