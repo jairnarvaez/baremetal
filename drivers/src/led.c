@@ -110,8 +110,8 @@ void set_led(int row, uint8_t pattern)
     uint32_t mask_cols_p0 = 0;
     uint32_t mask_cols_p1 = 0;
 
-    for (int i = 4; i >= 0; i--) {
-        if ((pattern >> i) & 1) {
+    for (int i = 0; i < 5; i++) {
+        if ((pattern >> (4 - i)) & 1) {
             if (i == 3) {
                 mask_cols_p1 |= (1 << COLS[i]);
             } else {
