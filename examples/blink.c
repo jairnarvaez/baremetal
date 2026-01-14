@@ -5,19 +5,15 @@ const uint8_t COLS[] = { COL1, COL2, COL3, COL4, COL5 };
 
 void error_blink()
 {
-    GPIO0.DIR = LED_MASK0;
-    GPIO1.DIR = LED_MASK1;
-
     while (1) {
-
-        _ROW(ROW1, 1, 1, 1, 1, 1);
-
-        delay(100000);
-
-        GPIO0.OUTSET = LED_MASK0;
-        GPIO1.OUTCLR = LED_MASK1;
-
-        delay(100000);
+        set_col(2, LED_ON);
+        delay(15000);
+        set_col(2, LED_OFF);
+        delay(15000);
+        set_row(2, LED_ON);
+        delay(15000);
+        set_row(2, LED_OFF);
+        delay(15000);
     }
 }
 
