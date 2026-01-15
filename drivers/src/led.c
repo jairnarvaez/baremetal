@@ -19,7 +19,7 @@ void error_blink()
     }
 }
 
-void set_led(int row, uint8_t pattern)
+void show_row(int row, uint8_t pattern)
 {
     if (row < 0 || row >= 5) {
         error_blink();
@@ -55,7 +55,7 @@ void set_led(int row, uint8_t pattern)
 void show(const uint8_t* img, int time)
 {
     for (int row = 0; row < time; row++) {
-        set_led(row % 5, img[row % 5]);
+        show_row(row % 5, img[row % 5]);
         delay(TIME);
     }
 }
