@@ -4,18 +4,18 @@
 const uint8_t ROWS[] = { ROW1, ROW2, ROW3, ROW4, ROW5 };
 const uint8_t COLS[] = { COL1, COL2, COL3, COL4, COL5 };
 
+const uint8_t ERROR[] = {
+    0b11111,
+    0b10000,
+    0b11100,
+    0b10000,
+    0b11111
+};
+
 void error_blink()
 {
     while (1) {
-        set_col(2, LED_ON);
-        delay(TIME_ERROR);
-        set_col(2, LED_OFF);
-        delay(TIME_ERROR);
-
-        set_row(2, LED_ON);
-        delay(TIME_ERROR);
-        set_row(2, LED_OFF);
-        delay(TIME_ERROR);
+        show(ERROR, 100);
     }
 }
 
