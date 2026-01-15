@@ -1,20 +1,8 @@
 #include "led.h"
-
-#include <stdint.h>
-#include <string.h>
+#include "utils.h"
 
 const uint8_t ROWS[] = { ROW1, ROW2, ROW3, ROW4, ROW5 };
 const uint8_t COLS[] = { COL1, COL2, COL3, COL4, COL5 };
-
-void* memcpy(void* dest, const void* src, size_t n)
-{
-    unsigned char* d = dest;
-    const unsigned char* s = src;
-    while (n--) {
-        *d++ = *s++;
-    }
-    return dest;
-}
 
 void error_blink()
 {
