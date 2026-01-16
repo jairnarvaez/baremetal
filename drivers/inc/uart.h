@@ -1,3 +1,6 @@
+#define UART_RX_BUFFER_SIZE 256
+#define UART_TX_BUFFER_SIZE 512
+
 #define PIN_TX 6
 #define PIN_RX 8
 

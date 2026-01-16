@@ -1,5 +1,6 @@
 #include "uart.h"
 #include "gpio.h"
+#include "utils.h"
 
 int string_length(const char* str)
 {
@@ -36,11 +37,8 @@ void uart_send(const char* str)
 {
     int len = string_length(str);
 
-    // Copiar a buffer en RAM
-    static char ram_buffer[256];
-    for (int i = 0; i < len; i++) {
-        ram_buffer[i] = str[i];
-    }
+    static char ram_buffer[UART_TX_BUFFER_SIZE];
+    memcpy(ram_buffer, str, len);
 
     UART.TXD_PTR = (unsigned int)ram_buffer;
     UART.TXD_MAXCNT = len;
