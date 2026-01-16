@@ -2,15 +2,6 @@
 #include "gpio.h"
 #include "utils.h"
 
-int string_length(const char* str)
-{
-    int len = 0;
-    while (str[len] != '\0') {
-        len++;
-    }
-    return len;
-}
-
 void uart_init()
 {
     GPIO0.DIRSET = _SET(PIN_TX);

@@ -60,3 +60,12 @@ void int2string(int num, char* str)
 
     reverse_string(&str[start_digits], i - start_digits);
 }
+
+int string_length(const char* str)
+{
+    int len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+    return len;
+}
