@@ -33,18 +33,31 @@ void uart_init()
     UART.ENABLE = 8;
 }
 
-void uart_send(const char* str)
+void uart_send_internal(const char* str, ...)
 {
-    int len = string_length(str);
-
     static char ram_buffer[UART_TX_BUFFER_SIZE];
+
+    char* t;
+    char* temp = ram_buffer;
+
+    int len = string_length(str);
     memcpy(ram_buffer, str, len);
+    temp += len;
+
+    va_list ap;
+    va_start(ap, str);
+
+    while ((t = va_arg(ap, char*))) {
+        memcpy(temp, t, string_length(t) + 1);
+        temp += string_length(temp);
+    }
+    va_end(ap);
+
+    int final_len = temp - ram_buffer;
 
     UART.TXD_PTR = (unsigned int)ram_buffer;
-    UART.TXD_MAXCNT = len;
-
+    UART.TXD_MAXCNT = final_len;
     UART.EVENTS_ENDTX = 0;
-
     UART.TASKS_STARTTX = 1;
 
     while (UART.EVENTS_ENDTX == 0)

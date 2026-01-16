@@ -1,3 +1,6 @@
+#include <stdarg.h>
+#define uart_send(str, ...) uart_send_internal(str, ##__VA_ARGS__, NULL)
+
 #define UART_RX_BUFFER_SIZE 256
 #define UART_TX_BUFFER_SIZE 512
 
@@ -40,4 +43,4 @@ struct _uarte {
 };
 
 void uart_init();
-void uart_send(const char* str);
+void uart_send_internal(const char* str, ...);
