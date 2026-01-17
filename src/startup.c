@@ -1,7 +1,7 @@
 #include <stdint.h>
 
 extern uint32_t _stack;
-extern uint32_t _etext;
+
 extern uint32_t _sdata;
 extern uint32_t _edata;
 extern uint32_t _sbss;
@@ -9,6 +9,9 @@ extern uint32_t _ebss;
 
 extern uint32_t __xram_start;
 extern uint32_t __xram_end;
+
+extern uint32_t _sidata;
+extern uint32_t _sixram;
 
 int main(void);
 void reset_handler(void);
@@ -23,27 +26,28 @@ void reset_handler(void)
     // Copy .data to SRAM
     uint32_t size = &_edata - &_sdata;
 
-    uint8_t* pDst = (uint8_t*)&_sdata; // SRAM
-    uint8_t* pSrc = (uint8_t*)&_etext; // Flash
+    uint32_t* pSrc = &_sidata; // Flash
+    uint32_t* pDst = &_sdata; // SRAM
 
     for (uint32_t i = 0; i < size; i++) {
         *pDst++ = *pSrc++;
     }
 
     // Copy .xram to RAM
-    size = (uint32_t)&__xram_end - (uint32_t)&__xram_start;
+    size = &__xram_end - &__xram_start;
 
-    pDst = (uint8_t*)&__xram_start;
-    pSrc = (uint8_t*)&_etext;
+    pSrc = &_sixram;
+    pDst = &__xram_start;
 
     for (uint32_t i = 0; i < size; i++) {
         *pDst++ = *pSrc++;
     }
 
     // Init the .bss section to zero in SRAM
-    size = (uint32_t)&_ebss - (uint32_t)&_sbss;
+    size = &_ebss - &_sbss;
 
-    pDst = (uint8_t*)&_sbss;
+    pDst = &_sbss;
+
     for (uint32_t i = 0; i < size; i++) {
         *pDst++ = 0;
     }

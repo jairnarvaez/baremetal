@@ -20,20 +20,25 @@ SECTIONS
     _etext = .;
   } > FLASH
 
-  .xram : AT (LOADADDR(.text) + SIZEOF(.text)) {
+  _sixram = LOADADDR(.text) + SIZEOF(.text);
+
+  .xram : AT (_sixram) {
+    . = ALIGN(4);
     __xram_start = .;
     *(.xram*)
     . = ALIGN(4);
     __xram_end = .;
   } > CODERAM
 
-  .data :
+  _sidata = _sixram + SIZEOF(.xram);
+
+  .data : AT (_sidata)
   {
     _sdata = .;
     *(.data*)
     . = ALIGN(4);
     _edata = .;
-  } > SRAM AT > FLASH
+  } > SRAM
 
   .bss :
   {
