@@ -1,12 +1,23 @@
 #include "utils.h"
+#include <stdint.h>
 
 void* memcpy(void* dest, const void* src, size_t n)
 {
-    unsigned char* d = dest;
-    const unsigned char* s = src;
-    while (n--) {
-        *d++ = *s++;
+    uint32_t* dest_pointer32 = dest;
+    const uint32_t* src_pointer32 = src;
+    size_t temp = n >> 2;
+
+    while (temp--) {
+        *dest_pointer32++ = *src_pointer32++;
     }
+
+    size_t leftover = n % 4;
+    uint8_t* dest_ponter8 = (uint8_t*)dest_pointer32;
+    const uint8_t* src_pointer8 = (const uint8_t*)src_pointer32;
+    while (leftover--) {
+        *dest_ponter8++ = *src_pointer8++;
+    }
+
     return dest;
 }
 
