@@ -1,10 +1,16 @@
 #include "display.h"
+#include "timer.h"
+#include "uart.h"
 #include "utils.h"
+#include <stdint.h>
 
 const uint8_t ROWS[] = { ROW1, ROW2, ROW3, ROW4, ROW5 };
 const uint8_t COLS[] = { COL1, COL2, COL3, COL4, COL5 };
 
-const uint8_t ERROR[] = {
+uint8_t currentRow = 0;
+uint8_t buffer_row_value[5];
+
+uint8_t ERROR[] = {
     0b11111,
     0b10000,
     0b11100,
@@ -12,12 +18,25 @@ const uint8_t ERROR[] = {
     0b11111
 };
 
+char numero[100];
+
+void timer0_irqhandler(void)
+{
+    show_row(currentRow, 0b00000);
+    currentRow = (currentRow + 1) % 5;
+    show_row(currentRow, buffer_row_value[currentRow]);
+
+    if (TIMER0.EVENTS_COMPARE[0]) {
+        TIMER0.EVENTS_COMPARE[0] = 0;
+    }
+}
+
 void error_blink()
 {
     GPIO0.DIR = LED_MASK0;
     GPIO1.DIR = LED_MASK1;
     while (1) {
-        show(ERROR, 100);
+        show(ERROR);
     }
 }
 
@@ -54,11 +73,10 @@ void show_row(int row, uint8_t pattern)
         GPIO1.OUTCLR = mask_cols_p1;
 }
 
-void show(const uint8_t* img, int time)
+void show(const uint8_t* row)
 {
-    for (int row = 0; row < time; row++) {
-        show_row(row % 5, img[row % 5]);
-        delay(TIME);
+    for (int i = 0; i < 5; i++) {
+        buffer_row_value[i] = row[i];
     }
 }
 
