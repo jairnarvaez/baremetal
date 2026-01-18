@@ -1,11 +1,10 @@
 #include "delay.h"
 
-void delay(unsigned n)
+void delay(unsigned interval_us)
 {
-    unsigned t = 16 * n;
-    while (t > 0) {
-        /* 62.5nsec per iteration */
+    unsigned cont = 16 * interval_us;
+    while (cont > 0) {
         nop();
-        t--;
+        cont--;
     }
 }
