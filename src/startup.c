@@ -76,6 +76,10 @@ void reset_handler(void)
         *pDst++ = 0;
     }
 
+    // Configure Matrix led
+    GPIO0.DIR = LED_MASK0;
+    GPIO1.DIR = LED_MASK1;
+
     // Call main()
     main();
 
