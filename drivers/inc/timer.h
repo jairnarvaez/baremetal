@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #define BASETIMER0 0x40008000
 #define BASETIMER1 0x40009000
 #define BASETIMER2 0x4000A000
@@ -34,4 +36,4 @@ struct _timer {
     unsigned CC[6]; // 0x540
 };
 
-void timer_init();
+void timer_init(uint32_t interval_us);
