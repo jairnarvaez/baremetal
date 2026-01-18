@@ -22,9 +22,9 @@ char numero[100];
 
 void timer0_irqhandler(void)
 {
-    show_row(currentRow, 0b00000);
+    display_row(currentRow, 0b00000);
     currentRow = (currentRow + 1) % 5;
-    show_row(currentRow, buffer_row_value[currentRow]);
+    display_row(currentRow, buffer_row_value[currentRow]);
 
     if (TIMER0.EVENTS_COMPARE[0]) {
         TIMER0.EVENTS_COMPARE[0] = 0;
@@ -36,11 +36,11 @@ void error_blink()
     GPIO0.DIR = LED_MASK0;
     GPIO1.DIR = LED_MASK1;
     while (1) {
-        show(ERROR);
+        display(ERROR);
     }
 }
 
-void show_row(int row, uint8_t pattern)
+void display_row(int row, uint8_t pattern)
 {
     if (row < 0 || row >= 5) {
         error_blink();
@@ -73,7 +73,7 @@ void show_row(int row, uint8_t pattern)
         GPIO1.OUTCLR = mask_cols_p1;
 }
 
-void show(const uint8_t* row)
+void display(const uint8_t* row)
 {
     for (int i = 0; i < 5; i++) {
         buffer_row_value[i] = row[i];

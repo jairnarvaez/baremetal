@@ -39,51 +39,51 @@ const uint8_t PLUS_PATTERN[] = {
 void animation_star(uint32_t time, uint32_t repetitions)
 {
     for (int i = 0; i < repetitions; i++) {
-        show(STAR_SMALL);
-        show(STAR_MEDIUM);
-        show(STAR_FULL);
+        display(STAR_SMALL);
+        display(STAR_MEDIUM);
+        display(STAR_FULL);
     }
 }
 
 void animation_pacman(uint32_t time, uint32_t repetitions)
 {
     for (int i = 0; i < repetitions; i++) {
-        show(PACMAN_OPEN);
-        show(PACMAN_CLOSED);
+        display(PACMAN_OPEN);
+        display(PACMAN_CLOSED);
     }
 }
 
 void animation_x_rotate(uint32_t time, uint32_t repetitions)
 {
     for (int i = 0; i < repetitions; i++) {
-        show(X_PATTERN);
-        show(PLUS_PATTERN);
+        display(X_PATTERN);
+        display(PLUS_PATTERN);
     }
 }
 
 void animation_heart(uint32_t time, uint32_t repetitions)
 {
     for (int i = 0; i < repetitions; i++) {
-        show(HEART_SMALL);
-        show(HEART_BIG);
+        display(HEART_SMALL);
+        display(HEART_BIG);
     }
 }
 
 void animation_arrow(uint32_t time, uint32_t repetitions)
 {
     for (int i = 0; i < repetitions; i++) {
-        show(ARROW_UP);
-        show(ARROW_RIGHT);
-        show(ARROW_DOWN);
-        show(ARROW_LEFT);
+        display(ARROW_UP);
+        display(ARROW_RIGHT);
+        display(ARROW_DOWN);
+        display(ARROW_LEFT);
     }
 }
 
 void animation_smile(uint32_t time, uint32_t repetitions)
 {
     for (int i = 0; i < repetitions; i++) {
-        show(SMILE);
-        show(WINK);
+        display(SMILE);
+        display(WINK);
     }
 }
 
