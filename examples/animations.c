@@ -19,7 +19,6 @@ const uint8_t HEART_BIG[] = { 0x0A, 0x1F, 0x1F, 0x0E, 0x04 };
 const uint8_t SMILE[] = { 0x00, 0x0A, 0x00, 0x11, 0x0E };
 const uint8_t WINK[] = { 0x00, 0x08, 0x00, 0x11, 0x0E };
 
-// Otra definicion
 const uint8_t X_PATTERN[] = {
     0b10001,
     0b01010,
@@ -35,72 +34,3 @@ const uint8_t PLUS_PATTERN[] = {
     0b00100,
     0b00100
 };
-
-void animation_star(uint32_t time, uint32_t repetitions)
-{
-    for (int i = 0; i < repetitions; i++) {
-        display(STAR_SMALL);
-        display(STAR_MEDIUM);
-        display(STAR_FULL);
-    }
-}
-
-void animation_pacman(uint32_t time, uint32_t repetitions)
-{
-    for (int i = 0; i < repetitions; i++) {
-        display(PACMAN_OPEN);
-        display(PACMAN_CLOSED);
-    }
-}
-
-void animation_x_rotate(uint32_t time, uint32_t repetitions)
-{
-    for (int i = 0; i < repetitions; i++) {
-        display(X_PATTERN);
-        display(PLUS_PATTERN);
-    }
-}
-
-void animation_heart(uint32_t time, uint32_t repetitions)
-{
-    for (int i = 0; i < repetitions; i++) {
-        display(HEART_SMALL);
-        display(HEART_BIG);
-    }
-}
-
-void animation_arrow(uint32_t time, uint32_t repetitions)
-{
-    for (int i = 0; i < repetitions; i++) {
-        display(ARROW_UP);
-        display(ARROW_RIGHT);
-        display(ARROW_DOWN);
-        display(ARROW_LEFT);
-    }
-}
-
-void animation_smile(uint32_t time, uint32_t repetitions)
-{
-    for (int i = 0; i < repetitions; i++) {
-        display(SMILE);
-        display(WINK);
-    }
-}
-
-void animations_main()
-{
-    GPIO0.DIR = LED_MASK0;
-    GPIO1.DIR = LED_MASK1;
-
-    uint32_t tiempo = 150;
-    uint32_t repetitions = 5;
-
-    for (;;) {
-        animation_star(tiempo, repetitions);
-        animation_x_rotate(tiempo, repetitions);
-        animation_heart(tiempo, repetitions);
-        animation_arrow(2 * tiempo, repetitions);
-        animation_smile(tiempo, repetitions);
-        animation_pacman(tiempo, repetitions);
-    }
-}

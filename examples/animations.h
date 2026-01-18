@@ -1,10 +1,19 @@
 #include "display.h"
 
-void animation_star(uint32_t time, uint32_t repetitions);
-void animation_pacman(uint32_t time, uint32_t repetitions);
-void animation_x_rotate(uint32_t time, uint32_t repetitions);
-void animation_heart(uint32_t time, uint32_t repetitions);
-void animation_arrow(uint32_t time, uint32_t repetitions);
-void animation_smile(uint32_t time, uint32_t repetitions);
+extern const uint8_t PACMAN_OPEN[5];
+extern const uint8_t PACMAN_CLOSED[5];
 
-void animations_main();
+extern const uint8_t STAR_FULL[5];
+extern const uint8_t STAR_MEDIUM[5];
+extern const uint8_t STAR_SMALL[5];
+
+extern const uint8_t ARROW_UP[5];
+extern const uint8_t ARROW_RIGHT[5];
+extern const uint8_t ARROW_DOWN[5];
+extern const uint8_t ARROW_LEFT[5];
+
+extern const uint8_t HEART_SMALL[5];
+extern const uint8_t HEART_BIG[5];
+
+extern const uint8_t SMILE[5];
+extern const uint8_t WINK[5];
