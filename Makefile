@@ -35,7 +35,4 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 upload: $(BUILD_DIR)/main.hex
-	sudo mount /dev/disk/by-label/MICROBIT /mnt/microbit
-	sudo cp $< /mnt/microbit/
-	sync
-	sudo umount /mnt/microbit
+	pyocd flash -t nrf52833 $(BUILD_DIR)/main.hex
