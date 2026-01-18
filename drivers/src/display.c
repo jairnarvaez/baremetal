@@ -93,9 +93,3 @@ void display_init(uint32_t refresh_rate_hz)
     GPIO0.DIR = LED_MASK0;
     GPIO1.DIR = LED_MASK1;
 }
-
-void blink_main()
-{
-    for (;;) {
-    }
-}

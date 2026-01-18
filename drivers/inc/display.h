@@ -11,5 +11,4 @@ void display(const uint8_t* row);
 void display_clear();
 void display_init(uint32_t display_fps);
 
-void blink_main();
 void timer0_irqhandler(void);
