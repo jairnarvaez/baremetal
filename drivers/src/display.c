@@ -80,6 +80,13 @@ void display(const uint8_t* row)
     }
 }
 
+void display_clear()
+{
+    for (int i = 0; i < 5; i++) {
+        buffer_row_value[i] = 0;
+    }
+}
+
 void blink_main()
 {
     for (;;) {
