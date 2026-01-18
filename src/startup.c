@@ -1,3 +1,4 @@
+#include "display.h"
 #include <stdint.h>
 
 extern uint32_t _stack;
@@ -15,10 +16,33 @@ extern uint32_t _sixram;
 
 int main(void);
 void reset_handler(void);
+void timer0_irqhandler(void);
+
+void default_handler(void)
+{
+    error_blink(); // Loop infinito si hay error
+}
 
 __attribute__((section(".isr_vector"))) uint32_t vectors[] = {
     (uint32_t)&_stack,
     (uint32_t)&reset_handler,
+    (uint32_t)&default_handler,
+    (uint32_t)&default_handler,
+    (uint32_t)&default_handler,
+    (uint32_t)&default_handler,
+    (uint32_t)&default_handler,
+    0,
+    0,
+    0,
+    0,
+    (uint32_t)&default_handler,
+    (uint32_t)&default_handler,
+    0,
+    (uint32_t)&default_handler,
+    (uint32_t)&default_handler,
+
+    [16 ... 23] = 0,
+    [24] = (uint32_t)&timer0_irqhandler
 };
 
 void reset_handler(void)
