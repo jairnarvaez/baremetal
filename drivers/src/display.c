@@ -14,6 +14,8 @@ const uint8_t ERROR[] = {
 
 void error_blink()
 {
+    GPIO0.DIR = LED_MASK0;
+    GPIO1.DIR = LED_MASK1;
     while (1) {
         show(ERROR, 100);
     }
