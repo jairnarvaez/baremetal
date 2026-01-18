@@ -93,3 +93,15 @@ void display_init(uint32_t refresh_rate_hz)
     GPIO0.DIR = LED_MASK0;
     GPIO1.DIR = LED_MASK1;
 }
+
+void display_set_pixel(uint8_t x, uint8_t y, uint8_t state)
+{
+    if (x > 4 || y > 4)
+        return;
+
+    if (state) {
+        buffer_row_value[y] |= 1 << (4 - x);
+    } else {
+        buffer_row_value[y] &= ~(1 << (4 - x));
+    }
+}

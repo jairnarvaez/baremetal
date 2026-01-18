@@ -10,5 +10,6 @@ void display_row(int row, uint8_t pattern);
 void display(const uint8_t* row);
 void display_clear();
 void display_init(uint32_t display_fps);
+void display_set_pixel(uint8_t x, uint8_t y, uint8_t state);
 
 void timer0_irqhandler(void);
