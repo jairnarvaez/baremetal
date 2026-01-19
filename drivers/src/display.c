@@ -105,3 +105,18 @@ void display_set_pixel(uint8_t x, uint8_t y, uint8_t state)
         buffer_row_value[y] &= ~(1 << (4 - x));
     }
 }
+
+void display_shift_right(void)
+{
+    for (int y = 0; y < 5; y++) {
+        buffer_row_value[y] >>= 1;
+    }
+}
+
+void display_shift_left(void)
+{
+    for (int y = 0; y < 5; y++) {
+        buffer_row_value[y] <<= 1;
+        buffer_row_value[y] &= 0x1F;
+    }
+}

@@ -11,5 +11,7 @@ void display(const uint8_t* row);
 void display_clear();
 void display_init(uint32_t display_fps);
 void display_set_pixel(uint8_t x, uint8_t y, uint8_t state);
+void display_shift_right();
+void display_shift_left();
 
 void timer0_irqhandler(void);
