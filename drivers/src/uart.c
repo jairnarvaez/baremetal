@@ -69,3 +69,10 @@ void uart_enable_rx_irq()
     NVIC_EnableIRQ(2);
     UART.TASKS_STARTRX = 1;
 }
+
+void receive_rx_irq(void)
+{
+    GPIO0.OUT = _SET(ROW1);
+    UART.EVENTS_ENDRX = 0;
+    UART.TASKS_STARTRX = 1;
+}

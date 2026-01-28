@@ -17,11 +17,7 @@ extern uint32_t _sixram;
 int main(void);
 void reset_handler(void);
 void timer0_irqhandler(void);
-
-void receive_rx_irq(void)
-{
-    error_blink();
-}
+void receive_rx_irq(void);
 
 void default_handler(void)
 {
