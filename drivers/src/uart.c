@@ -64,7 +64,7 @@ void uart_enable_rx_irq()
 {
     UART.EVENTS_ENDRX = 0;
     UART.RXD_PTR = (unsigned int)buffer_rx_irq;
-    UART.RXD_MAXCNT = 2;
+    UART.RXD_MAXCNT = UART_RX_BUFFER_SIZE;
     UART.INTENSET = 1 << 4;
     NVIC_EnableIRQ(2);
     UART.TASKS_STARTRX = 1;
