@@ -9,6 +9,9 @@
 
 #define UART (*(volatile struct _uarte*)(0x40002000))
 
+extern char ram_buffer[UART_TX_BUFFER_SIZE];
+extern char buffer_rx_irq[UART_RX_BUFFER_SIZE];
+
 struct _uarte {
     // Tasks
     unsigned TASKS_STARTRX; // 0x000

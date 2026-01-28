@@ -3,6 +3,10 @@
 #include "nvic.h"
 #include "utils.h"
 
+char ram_buffer[UART_TX_BUFFER_SIZE];
+
+char buffer_rx_irq[UART_RX_BUFFER_SIZE];
+
 void uart_init()
 {
     GPIO1.DIRSET = _SET(PIN_TX);
@@ -27,8 +31,6 @@ void uart_init()
 
 void uart_send_internal(const char* str, ...)
 {
-    static char ram_buffer[UART_TX_BUFFER_SIZE];
-
     char* t;
     char* temp = ram_buffer;
 
@@ -60,11 +62,9 @@ void uart_send_internal(const char* str, ...)
 
 void uart_enable_rx_irq()
 {
-    static char buffer_rx[UART_RX_BUFFER_SIZE];
-
     UART.EVENTS_ENDRX = 0;
-    UART.RXD_PTR = (unsigned int)buffer_rx;
-    UART.RXD_MAXCNT = 1;
+    UART.RXD_PTR = (unsigned int)buffer_rx_irq;
+    UART.RXD_MAXCNT = 2;
     UART.INTENSET = 1 << 4;
     NVIC_EnableIRQ(2);
     UART.TASKS_STARTRX = 1;
@@ -72,7 +72,6 @@ void uart_enable_rx_irq()
 
 void receive_rx_irq(void)
 {
-    GPIO0.OUT = _SET(ROW1);
     UART.EVENTS_ENDRX = 0;
     UART.TASKS_STARTRX = 1;
 }
