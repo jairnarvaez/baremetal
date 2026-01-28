@@ -1,5 +1,6 @@
 #include "uart.h"
 #include "gpio.h"
+#include "nvic.h"
 #include "utils.h"
 
 void uart_init()
@@ -55,4 +56,16 @@ void uart_send_internal(const char* str, ...)
         ;
 
     UART.TASKS_STOPTX = 1;
+}
+
+void uart_enable_rx_irq()
+{
+    static char buffer_rx[UART_RX_BUFFER_SIZE];
+
+    UART.EVENTS_ENDRX = 0;
+    UART.RXD_PTR = (unsigned int)buffer_rx;
+    UART.RXD_MAXCNT = 1;
+    UART.INTENSET = 1 << 4;
+    NVIC_EnableIRQ(2);
+    UART.TASKS_STARTRX = 1;
 }

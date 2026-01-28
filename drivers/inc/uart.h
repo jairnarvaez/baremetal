@@ -69,3 +69,4 @@ struct _uarte {
 
 void uart_init();
 void uart_send_internal(const char* str, ...);
+void uart_enable_rx_irq();
