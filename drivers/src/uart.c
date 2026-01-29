@@ -33,26 +33,26 @@ void uart_init()
 
 void uart_tx_polling(const char* str, ...)
 {
-    char* t;
-    char* temp = uart_tx_buffer_dma;
+    char* write_ptr = uart_tx_buffer_dma;
 
     int len = string_length(str);
-    memcpy(uart_tx_buffer_dma, str, len);
-    temp += len;
+    memcpy(write_ptr, str, len);
+    write_ptr += len;
 
-    va_list ap;
-    va_start(ap, str);
-
-    while ((t = va_arg(ap, char*))) {
-        memcpy(temp, t, string_length(t) + 1);
-        temp += string_length(temp);
+    va_list args;
+    va_start(args, str);
+    char* next_string;
+    while ((next_string = va_arg(args, char*))) {
+        int next_len = string_length(next_string);
+        memcpy(write_ptr, next_string, next_len);
+        write_ptr += next_len;
     }
-    va_end(ap);
+    va_end(args);
 
-    int final_len = temp - uart_tx_buffer_dma;
-
+    int total_length = write_ptr - uart_tx_buffer_dma;
     UART.TXD_PTR = (unsigned int)uart_tx_buffer_dma;
-    UART.TXD_MAXCNT = final_len;
+    UART.TXD_MAXCNT = total_length;
+
     UART.EVENTS_ENDTX = 0;
     UART.TASKS_STARTTX = 1;
 
