@@ -4,21 +4,22 @@
 #include "uart.h"
 #include "utils.h"
 
-uint8_t state = 1;
-
 int main(void)
 {
     uart_init();
-
     display_init(REFRESH_RATE_HZ);
+    uart_send("\n===========================\r\n");
+    uart_send("     UART INICIADO             \r\n");
+    uart_send("===========================\r\n");
 
-    int i = 0;
-    char buffer[10];
     for (;;) {
-        int2string(i++, buffer);
-        uart_send(buffer, "\r\n");
-        display_set_pixel(2, 2, state);
-        delay(1000000);
+        uart_send("\nAnimacion 1\r\n");
+        display(HEART_BIG);
+        delay(700000);
+
+        uart_send("Animacion 2\r\n");
+        display(HEART_SMALL);
+        delay(250000);
     }
     return 0;
 }
