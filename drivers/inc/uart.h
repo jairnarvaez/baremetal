@@ -11,6 +11,8 @@
 #define UART_RX_BUFFER_SIZE 256
 #define UART_TX_BUFFER_SIZE 512
 
+#define UART_TX_QUEUE_SIZE 8
+
 #define PIN_TX 6
 #define PIN_RX 8
 
@@ -18,7 +20,6 @@
 
 extern char uart_tx_buffer_dma[UART_TX_BUFFER_SIZE];
 extern char uart_rx_buffer_dma[UART_RX_BUFFER_SIZE];
-extern char buffer_tx_irq[UART_TX_BUFFER_SIZE];
 extern char buffer_rx_irq[UART_RX_BUFFER_SIZE];
 
 struct _uarte {
