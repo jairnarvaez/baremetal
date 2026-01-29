@@ -6,7 +6,7 @@
 
 int main(void)
 {
-    uart_init();
+    uart_init(UART_BAUDRATE_115200);
     display_init(REFRESH_RATE_HZ);
     uart_send("\n===========================\r\n");
     uart_send("     UART INICIADO             \r\n");

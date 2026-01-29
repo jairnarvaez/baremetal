@@ -9,7 +9,7 @@ char uart_rx_buffer_dma[UART_RX_BUFFER_SIZE];
 char buffer_tx_irq[UART_TX_BUFFER_SIZE];
 char buffer_rx_irq[UART_RX_BUFFER_SIZE];
 
-void uart_init()
+void uart_init(const unsigned int BAUDRATE)
 {
     GPIO1.DIRSET = _SET(PIN_TX);
     GPIO1.PIN_CNF[PIN_TX] = (CNF_DIR_OUTPUT << PIN_CNF_DIR)
@@ -26,7 +26,7 @@ void uart_init()
     UART.PSEL_CTS = 0xFFFFFFFF;
     UART.PSEL_RTS = 0xFFFFFFFF;
 
-    UART.BAUDRATE = 0x01D7E000;
+    UART.BAUDRATE = BAUDRATE;
     UART.CONFIG = 0;
     UART.ENABLE = 8;
 }

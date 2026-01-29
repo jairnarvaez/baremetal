@@ -72,7 +72,26 @@ struct _uarte {
     unsigned CONFIG; // 0x56C
 };
 
-void uart_init();
+#define UART_BAUDRATE_1200 0x0004f000
+#define UART_BAUDRATE_2400 0x0009d000
+#define UART_BAUDRATE_4800 0x0013b000
+#define UART_BAUDRATE_9600 0x00275000
+#define UART_BAUDRATE_14400 0x003af000
+#define UART_BAUDRATE_19200 0x004ea000
+#define UART_BAUDRATE_28800 0x0075c000
+#define UART_BAUDRATE_31250 0x00800000
+#define UART_BAUDRATE_38400 0x009d0000
+#define UART_BAUDRATE_56000 0x00e50000
+#define UART_BAUDRATE_57600 0x00eb0000
+#define UART_BAUDRATE_76800 0x013a9000
+#define UART_BAUDRATE_115200 0x01d60000
+#define UART_BAUDRATE_230400 0x03b00000
+#define UART_BAUDRATE_250000 0x04000000
+#define UART_BAUDRATE_460800 0x07400000
+#define UART_BAUDRATE_921600 0x0f000000
+#define UART_BAUDRATE_1M 0x10000000
+
+void uart_init(const unsigned int BAUDRATE);
 void uart_tx_polling(const char* str, ...);
 void uart_rx_polling(const unsigned int num_bytes);
 void uart_rx_irq_enable();
