@@ -17,7 +17,7 @@ extern uint32_t _sixram;
 int main(void);
 void reset_handler(void);
 void timer0_irqhandler(void);
-void receive_rx_irq(void);
+void UARTE0_IRQHandler(void);
 
 void default_handler(void)
 {
@@ -43,7 +43,7 @@ __attribute__((section(".isr_vector"))) uint32_t vectors[] = {
     (uint32_t)&default_handler,
 
     [16 ... 17] = 0,
-    [18] = (uint32_t)&receive_rx_irq,
+    [18] = (uint32_t)&UARTE0_IRQHandler,
     [19 ... 23] = 0,
     [24] = (uint32_t)&timer0_irqhandler
 };

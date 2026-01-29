@@ -1,5 +1,5 @@
 #include <stdarg.h>
-#define uart_send(str, ...) uart_send_internal_polling(str, ##__VA_ARGS__, NULL)
+#define uart_send(str, ...) uart_tx_polling(str, ##__VA_ARGS__, NULL)
 
 #define UART_RX_BUFFER_SIZE 256
 #define UART_TX_BUFFER_SIZE 512
@@ -9,9 +9,9 @@
 
 #define UART (*(volatile struct _uarte*)(0x40002000))
 
-extern char ram_buffer[UART_TX_BUFFER_SIZE];
+extern char uart_tx_buffer_dma[UART_TX_BUFFER_SIZE];
+extern char uart_rx_buffer_dma[UART_RX_BUFFER_SIZE];
 extern char buffer_rx_irq[UART_RX_BUFFER_SIZE];
-extern char ram_buffer_rx[UART_RX_BUFFER_SIZE];
 
 struct _uarte {
     // Tasks
@@ -72,8 +72,8 @@ struct _uarte {
 };
 
 void uart_init();
-void uart_send_internal_polling(const char* str, ...);
-void uart_receive_internal_polling(const unsigned int num_bytes);
-void uart_enable_rx_irq();
+void uart_tx_polling(const char* str, ...);
+void uart_rx_polling(const unsigned int num_bytes);
+void uart_rx_irq_enable();
 
-void receive_rx_irq(void);
+void UARTE0_IRQHandler(void);
