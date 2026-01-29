@@ -80,3 +80,28 @@ int string_length(const char* str)
     }
     return len;
 }
+
+int concat_strings(char* dest, size_t dest_size, const char* first, va_list args)
+{
+    char* write_ptr = dest;
+    char* dest_end = dest + dest_size;
+
+    size_t len = string_length(first);
+
+    if (write_ptr + len >= dest_end)
+        return -1;
+
+    memcpy(write_ptr, first, len);
+    write_ptr += len;
+
+    const char* next;
+    while ((next = va_arg(args, const char*))) {
+        size_t next_len = string_length(next);
+        if (write_ptr + next_len >= dest_end)
+            break;
+        memcpy(write_ptr, next, next_len);
+        write_ptr += next_len;
+    }
+
+    return write_ptr - dest;
+}
