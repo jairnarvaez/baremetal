@@ -11,6 +11,7 @@
 
 extern char uart_tx_buffer_dma[UART_TX_BUFFER_SIZE];
 extern char uart_rx_buffer_dma[UART_RX_BUFFER_SIZE];
+extern char buffer_tx_irq[UART_TX_BUFFER_SIZE];
 extern char buffer_rx_irq[UART_RX_BUFFER_SIZE];
 
 struct _uarte {
@@ -75,5 +76,6 @@ void uart_init();
 void uart_tx_polling(const char* str, ...);
 void uart_rx_polling(const unsigned int num_bytes);
 void uart_rx_irq_enable();
-
+void uart_tx_irq_enable();
+void uart_tx_irq(char* msg);
 void UARTE0_IRQHandler(void);

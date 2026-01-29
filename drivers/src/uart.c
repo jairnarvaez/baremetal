@@ -6,6 +6,7 @@
 char uart_tx_buffer_dma[UART_TX_BUFFER_SIZE];
 char uart_rx_buffer_dma[UART_RX_BUFFER_SIZE];
 
+char buffer_tx_irq[UART_TX_BUFFER_SIZE];
 char buffer_rx_irq[UART_RX_BUFFER_SIZE];
 
 void uart_init()
@@ -71,6 +72,14 @@ void uart_rx_polling(const unsigned int num_bytes)
         ;
 }
 
+void uart_tx_irq(char* msg)
+{
+    uint32_t len_msg = string_length(msg) + 1;
+    UART.TXD_MAXCNT = len_msg;
+    memcpy(buffer_tx_irq, msg, len_msg);
+    UART.TASKS_STARTTX = 1;
+}
+
 void uart_rx_irq_enable()
 {
     UART.EVENTS_ENDRX = 0;
@@ -81,8 +90,23 @@ void uart_rx_irq_enable()
     UART.TASKS_STARTRX = 1;
 }
 
+void uart_tx_irq_enable()
+{
+    UART.EVENTS_ENDTX = 0;
+    UART.TXD_PTR = (unsigned int)buffer_tx_irq;
+    UART.INTENSET = 1 << 8;
+    NVIC_EnableIRQ(2);
+}
+
 void UARTE0_IRQHandler(void)
 {
-    UART.EVENTS_ENDRX = 0;
-    UART.TASKS_STARTRX = 1;
+    if (UART.EVENTS_ENDRX) {
+        UART.EVENTS_ENDRX = 0;
+        UART.TASKS_STARTRX = 1;
+    }
+
+    if (UART.EVENTS_ENDTX) {
+        UART.EVENTS_ENDTX = 0;
+        UART.TASKS_STOPTX = 1;
+    }
 }
