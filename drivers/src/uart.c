@@ -4,6 +4,7 @@
 #include "utils.h"
 
 char ram_buffer[UART_TX_BUFFER_SIZE];
+char ram_buffer_rx[UART_RX_BUFFER_SIZE];
 
 char buffer_rx_irq[UART_RX_BUFFER_SIZE];
 
@@ -58,6 +59,16 @@ void uart_send_internal_polling(const char* str, ...)
         ;
 
     UART.TASKS_STOPTX = 1;
+}
+
+void uart_receive_internal_polling(const unsigned int num_bytes)
+{
+    UART.RXD_PTR = (unsigned int)ram_buffer_rx;
+    UART.RXD_MAXCNT = num_bytes;
+    UART.EVENTS_ENDRX = 0;
+    UART.TASKS_STARTRX = 1;
+    while (UART.EVENTS_ENDRX == 0)
+        ;
 }
 
 void uart_enable_rx_irq()

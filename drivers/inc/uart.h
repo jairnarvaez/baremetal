@@ -11,6 +11,7 @@
 
 extern char ram_buffer[UART_TX_BUFFER_SIZE];
 extern char buffer_rx_irq[UART_RX_BUFFER_SIZE];
+extern char ram_buffer_rx[UART_RX_BUFFER_SIZE];
 
 struct _uarte {
     // Tasks
@@ -72,6 +73,7 @@ struct _uarte {
 
 void uart_init();
 void uart_send_internal_polling(const char* str, ...);
+void uart_receive_internal_polling(const unsigned int num_bytes);
 void uart_enable_rx_irq();
 
 void receive_rx_irq(void);
