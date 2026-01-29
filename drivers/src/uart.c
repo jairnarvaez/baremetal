@@ -29,7 +29,7 @@ void uart_init()
     UART.ENABLE = 8;
 }
 
-void uart_send_internal(const char* str, ...)
+void uart_send_internal_polling(const char* str, ...)
 {
     char* t;
     char* temp = ram_buffer;
