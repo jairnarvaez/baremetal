@@ -50,7 +50,7 @@ void uart_tx_polling(const char* str, ...)
     va_list args;
     va_start(args, str);
 
-    int total_length = concat_strings(uart_tx_buffer_dma, UART_TX_BUFFER_SIZE, str, args);
+    int total_length = vsconcat_strings(uart_tx_buffer_dma, UART_TX_BUFFER_SIZE, str, args);
     va_end(args);
 
     if (total_length < 0)
@@ -75,7 +75,7 @@ void uart_tx_irq(const char* str, ...)
     va_start(args, str);
 
     memset(tx_queue.buffer[tx_queue.head], 0, UART_TX_BUFFER_SIZE);
-    int total_length = concat_strings(tx_queue.buffer[tx_queue.head], UART_TX_BUFFER_SIZE, str, args);
+    int total_length = vsconcat_strings(tx_queue.buffer[tx_queue.head], UART_TX_BUFFER_SIZE, str, args);
     va_end(args);
 
     if (total_length < 0) {

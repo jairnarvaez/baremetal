@@ -81,7 +81,7 @@ int string_length(const char* str)
     return len;
 }
 
-int concat_strings(char* dest, size_t dest_size, const char* first, va_list args)
+int vsconcat_strings(char* dest, size_t dest_size, const char* first, va_list args)
 {
     char* write_ptr = dest;
     char* dest_end = dest + dest_size;
