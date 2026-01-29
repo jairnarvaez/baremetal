@@ -107,7 +107,7 @@ struct _uarte {
 
 void uart_init(const unsigned int BAUDRATE);
 void uart_tx_polling(const char* str, ...);
-void uart_rx_polling(const unsigned int num_bytes);
+void uart_rx_polling(char* buffer, const unsigned int num_bytes);
 void uart_rx_irq_enable();
 void uart_tx_irq_enable();
 void uart_tx_irq(const char* str, ...);

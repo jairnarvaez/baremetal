@@ -85,7 +85,7 @@ void uart_tx_irq(const char* str, ...)
     UART.TASKS_STARTTX = 1;
 }
 
-void uart_rx_polling(const unsigned int num_bytes)
+void uart_rx_polling(char* buffer, const unsigned int num_bytes)
 {
     UART.RXD_PTR = (unsigned int)uart_rx_buffer_dma;
     UART.RXD_MAXCNT = num_bytes;
@@ -93,6 +93,7 @@ void uart_rx_polling(const unsigned int num_bytes)
     UART.TASKS_STARTRX = 1;
     while (UART.EVENTS_ENDRX == 0)
         ;
+    memcpy(buffer, uart_rx_buffer_dma, num_bytes);
 }
 
 void uart_rx_irq_enable()
