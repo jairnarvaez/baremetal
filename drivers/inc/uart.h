@@ -91,6 +91,12 @@ struct _uarte {
 #define UART_BAUDRATE_921600 0x0f000000
 #define UART_BAUDRATE_1M 0x10000000
 
+#define UART_PSEL_PORT_BIT 5
+#define UART_ENABLE_VALUE 8
+#define UART_INT_ENDRX 4
+#define UART_INT_ENDTX 8
+#define UART_IRQ_NUMBER 2
+
 void uart_init(const unsigned int BAUDRATE);
 void uart_tx_polling(const char* str, ...);
 void uart_rx_polling(const unsigned int num_bytes);

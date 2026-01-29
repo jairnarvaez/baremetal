@@ -22,13 +22,13 @@ void uart_init(const unsigned int BAUDRATE)
         | (CNF_PULL_DISABLED << PIN_CNF_PULL);
 
     UART.PSEL_TXD = PIN_TX;
-    UART.PSEL_RXD = PIN_RX | 1 << 5;
+    UART.PSEL_RXD = PIN_RX | 1 << UART_PSEL_PORT_BIT;
     UART.PSEL_CTS = 0xFFFFFFFF;
     UART.PSEL_RTS = 0xFFFFFFFF;
 
     UART.BAUDRATE = BAUDRATE;
     UART.CONFIG = 0;
-    UART.ENABLE = 8;
+    UART.ENABLE = UART_ENABLE_VALUE;
 }
 
 void uart_tx_polling(const char* str, ...)
@@ -85,8 +85,10 @@ void uart_rx_irq_enable()
     UART.EVENTS_ENDRX = 0;
     UART.RXD_PTR = (unsigned int)buffer_rx_irq;
     UART.RXD_MAXCNT = UART_RX_BUFFER_SIZE;
-    UART.INTENSET = 1 << 4;
-    NVIC_EnableIRQ(2);
+    UART.INTENSET = 1 << UART_INT_ENDRX;
+
+    NVIC_EnableIRQ(UART_IRQ_NUMBER);
+
     UART.TASKS_STARTRX = 1;
 }
 
@@ -94,8 +96,9 @@ void uart_tx_irq_enable()
 {
     UART.EVENTS_ENDTX = 0;
     UART.TXD_PTR = (unsigned int)buffer_tx_irq;
-    UART.INTENSET = 1 << 8;
-    NVIC_EnableIRQ(2);
+    UART.INTENSET = 1 << UART_INT_ENDTX;
+
+    NVIC_EnableIRQ(UART_IRQ_NUMBER);
 }
 
 void UARTE0_IRQHandler(void)
