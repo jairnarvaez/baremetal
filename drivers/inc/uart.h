@@ -1,11 +1,18 @@
 #include <stdarg.h>
 
-#define UART_MODE_IRQ 1 // Cambiar a 1 para IRQ
+#define UART_TX_MODE_IRQ 1 // Cambiar a 1 para IRQ
+#define UART_RX_MODE_IRQ 0 // Cambiar a 1 para IRQ
 
-#if UART_MODE_IRQ
+#if UART_TX_MODE_IRQ
 #define uart_send(str, ...) uart_tx_irq(str, ##__VA_ARGS__, NULL)
 #else
 #define uart_send(str, ...) uart_tx_polling(str, ##__VA_ARGS__, NULL)
+#endif
+
+#if UART_RX_MODE_IRQ
+#define uart_receive(str, bytes) uart_rx_irq(str, ##__VA_ARGS__, NULL)
+#else
+#define uart_receive(str, bytes) uart_rx_polling(str, bytes)
 #endif
 
 #define UART_RX_BUFFER_SIZE 256
