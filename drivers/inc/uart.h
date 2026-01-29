@@ -1,5 +1,12 @@
 #include <stdarg.h>
+
+#define UART_MODE_IRQ 1 // Cambiar a 1 para IRQ
+
+#if UART_MODE_IRQ
+#define uart_send(str, ...) uart_tx_irq(str, ##__VA_ARGS__, NULL)
+#else
 #define uart_send(str, ...) uart_tx_polling(str, ##__VA_ARGS__, NULL)
+#endif
 
 #define UART_RX_BUFFER_SIZE 256
 #define UART_TX_BUFFER_SIZE 512
