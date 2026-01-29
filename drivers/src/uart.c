@@ -33,33 +33,40 @@ void uart_init(const unsigned int BAUDRATE)
 
 void uart_tx_polling(const char* str, ...)
 {
-    char* write_ptr = uart_tx_buffer_dma;
-
-    int len = string_length(str);
-    memcpy(write_ptr, str, len);
-    write_ptr += len;
-
     va_list args;
     va_start(args, str);
-    char* next_string;
-    while ((next_string = va_arg(args, char*))) {
-        int next_len = string_length(next_string);
-        memcpy(write_ptr, next_string, next_len);
-        write_ptr += next_len;
-    }
+
+    int total_length = concat_strings(uart_tx_buffer_dma, UART_TX_BUFFER_SIZE, str, args);
     va_end(args);
 
-    int total_length = write_ptr - uart_tx_buffer_dma;
+    if (total_length < 0)
+        return;
+
     UART.TXD_PTR = (unsigned int)uart_tx_buffer_dma;
     UART.TXD_MAXCNT = total_length;
-
     UART.EVENTS_ENDTX = 0;
     UART.TASKS_STARTTX = 1;
-
     while (UART.EVENTS_ENDTX == 0)
         ;
-
     UART.TASKS_STOPTX = 1;
+}
+
+void uart_tx_irq(const char* str, ...)
+{
+    va_list args;
+    va_start(args, str);
+
+    int total_length = concat_strings(buffer_tx_irq, UART_TX_BUFFER_SIZE, str, args);
+    va_end(args);
+
+    if (total_length < 0) {
+        return;
+    }
+
+    UART.TXD_PTR = (unsigned int)buffer_tx_irq;
+    UART.TXD_MAXCNT = total_length;
+    UART.EVENTS_ENDTX = 0;
+    UART.TASKS_STARTTX = 1;
 }
 
 void uart_rx_polling(const unsigned int num_bytes)
@@ -70,14 +77,6 @@ void uart_rx_polling(const unsigned int num_bytes)
     UART.TASKS_STARTRX = 1;
     while (UART.EVENTS_ENDRX == 0)
         ;
-}
-
-void uart_tx_irq(char* msg)
-{
-    uint32_t len_msg = string_length(msg) + 1;
-    UART.TXD_MAXCNT = len_msg;
-    memcpy(buffer_tx_irq, msg, len_msg);
-    UART.TASKS_STARTTX = 1;
 }
 
 void uart_rx_irq_enable()

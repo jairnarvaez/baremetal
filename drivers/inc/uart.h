@@ -102,5 +102,5 @@ void uart_tx_polling(const char* str, ...);
 void uart_rx_polling(const unsigned int num_bytes);
 void uart_rx_irq_enable();
 void uart_tx_irq_enable();
-void uart_tx_irq(char* msg);
+void uart_tx_irq(const char* str, ...);
 void UARTE0_IRQHandler(void);
