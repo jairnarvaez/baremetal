@@ -93,6 +93,8 @@ void uart_tx_irq(const char* str, ...)
         return;
     }
 
+    NVIC_DisableIRQ(UART_IRQ_NUMBER);
+
     uint32_t old_count = tx_queue.count;
 
     tx_queue.head = (tx_queue.head + 1) % UART_TX_QUEUE_SIZE;
@@ -104,6 +106,8 @@ void uart_tx_irq(const char* str, ...)
         UART.EVENTS_ENDTX = 0;
         UART.TASKS_STARTTX = 1;
     }
+
+    NVIC_EnableIRQ(UART_IRQ_NUMBER);
 }
 
 void uart_rx_polling(char* buffer, const unsigned int num_bytes)
@@ -127,6 +131,8 @@ void uart_rx_irq(char* buffer, const unsigned int num_bytes)
     rx_queue.size_buffer_dest[rx_queue.head] = num_bytes;
     memset(rx_queue.buffer[rx_queue.head], 0, UART_RX_BUFFER_SIZE);
 
+    NVIC_DisableIRQ(UART_IRQ_NUMBER);
+
     uint32_t old_count = rx_queue.count;
 
     rx_queue.head = (rx_queue.head + 1) % UART_RX_QUEUE_SIZE;
@@ -138,6 +144,8 @@ void uart_rx_irq(char* buffer, const unsigned int num_bytes)
         UART.EVENTS_ENDRX = 0;
         UART.TASKS_STARTRX = 1;
     }
+
+    NVIC_EnableIRQ(UART_IRQ_NUMBER);
 }
 
 void uart_rx_irq_enable()
