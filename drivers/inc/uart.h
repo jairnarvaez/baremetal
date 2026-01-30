@@ -15,11 +15,11 @@
 #define uart_receive(str, bytes) uart_rx_polling(str, bytes)
 #endif
 
-#define UART_RX_BUFFER_SIZE 256
-#define UART_TX_BUFFER_SIZE 512
+#define UART_RX_BUFFER_SIZE 128
+#define UART_TX_BUFFER_SIZE 128
 
-#define UART_TX_QUEUE_SIZE 8
-#define UART_RX_QUEUE_SIZE 8
+#define UART_TX_QUEUE_SIZE 16
+#define UART_RX_QUEUE_SIZE 16
 
 #define PIN_TX 6
 #define PIN_RX 8
