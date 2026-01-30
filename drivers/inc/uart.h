@@ -1,7 +1,7 @@
 #include <stdarg.h>
 
 #define UART_TX_MODE_IRQ 1 // Cambiar a 1 para IRQ
-#define UART_RX_MODE_IRQ 0 // Cambiar a 1 para IRQ
+#define UART_RX_MODE_IRQ 1 // Cambiar a 1 para IRQ
 
 #if UART_TX_MODE_IRQ
 #define uart_send(str, ...) uart_tx_irq(str, ##__VA_ARGS__, NULL)
@@ -10,7 +10,7 @@
 #endif
 
 #if UART_RX_MODE_IRQ
-#define uart_receive(str, bytes) uart_rx_irq(str, ##__VA_ARGS__, NULL)
+#define uart_receive(str, bytes) uart_rx_irq(str, bytes)
 #else
 #define uart_receive(str, bytes) uart_rx_polling(str, bytes)
 #endif
@@ -19,6 +19,7 @@
 #define UART_TX_BUFFER_SIZE 512
 
 #define UART_TX_QUEUE_SIZE 8
+#define UART_RX_QUEUE_SIZE 8
 
 #define PIN_TX 6
 #define PIN_RX 8
@@ -113,9 +114,14 @@ struct _uarte {
 #define UART_IRQ_NUMBER 2
 
 void uart_init(const unsigned int BAUDRATE);
+
 void uart_tx_polling(const char* str, ...);
 void uart_rx_polling(char* buffer, const unsigned int num_bytes);
+
 void uart_rx_irq_enable();
 void uart_tx_irq_enable();
+
 void uart_tx_irq(const char* str, ...);
+void uart_rx_irq(char* buffer, const unsigned int num_bytes);
+
 void UARTE0_IRQHandler(void);

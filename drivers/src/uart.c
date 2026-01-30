@@ -2,20 +2,29 @@
 #include "gpio.h"
 #include "nvic.h"
 #include "utils.h"
+#include <string.h>
 
 char uart_tx_buffer_dma[UART_TX_BUFFER_SIZE];
 char uart_rx_buffer_dma[UART_RX_BUFFER_SIZE];
 
-char buffer_rx_irq[UART_RX_BUFFER_SIZE];
-
 typedef struct {
     char buffer[UART_TX_QUEUE_SIZE][UART_TX_BUFFER_SIZE];
-    volatile uint32_t head;
-    volatile uint32_t tail;
-    volatile uint32_t count;
+    uint32_t head;
+    uint32_t tail;
+    uint32_t count;
 } uart_tx_queue_t;
 
+typedef struct {
+    char buffer[UART_RX_QUEUE_SIZE][UART_RX_BUFFER_SIZE];
+    char* buffer_dest[UART_RX_QUEUE_SIZE];
+    size_t size_buffer_dest[UART_RX_QUEUE_SIZE];
+    uint32_t head;
+    uint32_t tail;
+    uint32_t count;
+} uart_rx_queue_t;
+
 uart_tx_queue_t tx_queue = { 0 };
+uart_rx_queue_t rx_queue = { 0 };
 
 void uart_init(const unsigned int BAUDRATE)
 {
@@ -102,16 +111,35 @@ void uart_rx_polling(char* buffer, const unsigned int num_bytes)
     memcpy(buffer, uart_rx_buffer_dma, num_bytes);
 }
 
+void uart_rx_irq(char* buffer, const unsigned int num_bytes)
+{
+    if (rx_queue.count >= UART_RX_QUEUE_SIZE) {
+        return;
+    }
+
+    rx_queue.buffer_dest[rx_queue.head] = buffer;
+    rx_queue.size_buffer_dest[rx_queue.head] = num_bytes;
+    memset(rx_queue.buffer[rx_queue.head], 0, UART_RX_BUFFER_SIZE);
+
+    uint32_t old_count = rx_queue.count;
+
+    rx_queue.head = (rx_queue.head + 1) % UART_RX_QUEUE_SIZE;
+    rx_queue.count++;
+
+    if (old_count == 0) {
+        UART.RXD_PTR = (unsigned int)rx_queue.buffer[rx_queue.tail];
+        UART.RXD_MAXCNT = num_bytes;
+        UART.EVENTS_ENDRX = 0;
+        UART.TASKS_STARTRX = 1;
+    }
+}
+
 void uart_rx_irq_enable()
 {
     UART.EVENTS_ENDRX = 0;
-    UART.RXD_PTR = (unsigned int)buffer_rx_irq;
-    UART.RXD_MAXCNT = UART_RX_BUFFER_SIZE;
     UART.INTENSET = 1 << UART_INT_ENDRX;
 
     NVIC_EnableIRQ(UART_IRQ_NUMBER);
-
-    UART.TASKS_STARTRX = 1;
 }
 
 void uart_tx_irq_enable()
@@ -126,7 +154,21 @@ void UARTE0_IRQHandler(void)
 {
     if (UART.EVENTS_ENDRX) {
         UART.EVENTS_ENDRX = 0;
-        UART.TASKS_STARTRX = 1;
+        UART.TASKS_STOPRX = 1;
+
+        memcpy(rx_queue.buffer_dest[rx_queue.tail],
+            rx_queue.buffer[rx_queue.tail],
+            UART.RXD_AMOUNT);
+
+        rx_queue.tail = (rx_queue.tail + 1) % UART_RX_QUEUE_SIZE;
+        rx_queue.count--;
+
+        if (rx_queue.count > 0) {
+            UART.RXD_PTR = (unsigned int)rx_queue.buffer[rx_queue.tail];
+            UART.RXD_MAXCNT = rx_queue.size_buffer_dest[rx_queue.tail];
+            UART.EVENTS_ENDRX = 0;
+            UART.TASKS_STARTRX = 1;
+        }
     }
 
     if (UART.EVENTS_ENDTX) {
