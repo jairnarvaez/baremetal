@@ -91,13 +91,17 @@ void uart_tx_irq(const char* str, ...)
         return;
     }
 
+    uint32_t old_count = tx_queue.count;
+
     tx_queue.head = (tx_queue.head + 1) % UART_TX_QUEUE_SIZE;
     tx_queue.count++;
 
-    UART.TXD_PTR = (unsigned int)tx_queue.buffer[tx_queue.tail];
-    UART.TXD_MAXCNT = string_length(tx_queue.buffer[tx_queue.tail]);
-    UART.EVENTS_ENDTX = 0;
-    UART.TASKS_STARTTX = 1;
+    if (old_count == 0) {
+        UART.TXD_PTR = (unsigned int)tx_queue.buffer[tx_queue.tail];
+        UART.TXD_MAXCNT = string_length(tx_queue.buffer[tx_queue.tail]);
+        UART.EVENTS_ENDTX = 0;
+        UART.TASKS_STARTTX = 1;
+    }
 }
 
 void uart_rx_polling(char* buffer, const unsigned int num_bytes)
