@@ -1,25 +1,29 @@
-#include "animations.h"
-#include "nvic.h"
-#include "timer.h"
 #include "uart.h"
 #include "utils.h"
+
+#define ECHO_BUFFER_SIZE 64
+
+char echo_buffer[ECHO_BUFFER_SIZE] = { 0 };
+
+void on_receive_msg(size_t bytes)
+{
+    uart_send(echo_buffer);
+}
 
 int main(void)
 {
     uart_init(UART_BAUDRATE_115200);
-    display_init(REFRESH_RATE_HZ);
-    uart_send("\n===========================\r\n");
-    uart_send("     UART INICIADO             \r\n");
+
+    uart_send("\r\n");
     uart_send("===========================\r\n");
+    uart_send("   UART ECHO MODE ACTIVE   \r\n");
+    uart_send("===========================\r\n");
+    uart_send("Waiting for data...\r\n\r\n");
 
-    for (;;) {
-        uart_send("\nAnimacion 1\r\n");
-        display(HEART_BIG);
-        delay(700000);
-
-        uart_send("Animacion 2\r\n");
-        display(HEART_SMALL);
-        delay(250000);
+    while (1) {
+        uart_receive(echo_buffer, 1);
+        echo_buffer[0] = '\0';
     }
+
     return 0;
 }
