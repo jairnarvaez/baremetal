@@ -47,11 +47,13 @@ void uart_init(const unsigned int BAUDRATE)
     UART.CONFIG = 0;
     UART.ENABLE = UART_ENABLE_VALUE;
 
-    if (UART_TX_MODE_IRQ)
-        uart_tx_irq_enable();
+#if UART_TX_MODE_IRQ
+    uart_tx_irq_enable();
+#endif
 
-    if (UART_RX_MODE_IRQ)
-        uart_rx_irq_enable();
+#if UART_RX_MODE_IRQ
+    uart_rx_irq_enable();
+#endif
 }
 
 void uart_tx_polling(const char* str, ...)
