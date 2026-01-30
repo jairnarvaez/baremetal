@@ -4,6 +4,11 @@
 #include "utils.h"
 #include <string.h>
 
+__attribute__((weak)) void on_receive_msg(size_t bytes)
+{
+    (void)bytes;
+}
+
 char uart_tx_buffer_dma[UART_TX_BUFFER_SIZE];
 char uart_rx_buffer_dma[UART_RX_BUFFER_SIZE];
 
@@ -173,6 +178,8 @@ void UARTE0_IRQHandler(void)
         memcpy(rx_queue.buffer_dest[rx_queue.tail],
             rx_queue.buffer[rx_queue.tail],
             UART.RXD_AMOUNT);
+
+        on_receive_msg(UART.RXD_AMOUNT);
 
         rx_queue.tail = (rx_queue.tail + 1) % UART_RX_QUEUE_SIZE;
         rx_queue.count--;
