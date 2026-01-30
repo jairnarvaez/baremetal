@@ -81,6 +81,31 @@ int string_length(const char* str)
     return len;
 }
 
+int concat_string(char* dest, size_t dest_size, const char* src)
+{
+    if (!dest || !src || dest_size == 0)
+        return -1;
+
+    size_t dest_len = string_length(dest);
+
+    if (dest_len >= dest_size - 1)
+        return -1;
+
+    char* write_ptr = dest + dest_len;
+    char* dest_end = dest + dest_size - 1;
+
+    while (*src != '\0' && write_ptr < dest_end) {
+        *write_ptr++ = *src++;
+    }
+
+    *write_ptr = '\0';
+
+    if (*src != '\0')
+        return -1;
+
+    return (int)(write_ptr - dest);
+}
+
 int vsconcat_strings(char* dest, size_t dest_size, const char* first, va_list args)
 {
     char* write_ptr = dest;
