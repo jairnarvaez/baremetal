@@ -39,22 +39,13 @@ typedef enum {
     LED_ON = 1
 } LedState;
 
-#define _SET(p) (1 << p)
+#define SET_BIT(p) (1 << (p))
 
-#define MATRIX_ROW_MASK ((1 << LED_ROW1) | (1 << LED_ROW2) | (1 << LED_ROW3) | (1 << LED_ROW4) | (1 << LED_ROW5))
+#define MATRIX_ROW_MASK (SET_BIT(LED_ROW1) | SET_BIT(LED_ROW2) | SET_BIT(LED_ROW3) | SET_BIT(LED_ROW4) | SET_BIT(LED_ROW5))
 
-#define MATRIX_COLS_PORT0_MASK ((1 << LED_COL1) | (1 << LED_COL2) | (1 << LED_COL3) | (1 << LED_COL5))
+#define MATRIX_COL_PORT0_MASK (SET_BIT(LED_COL1) | SET_BIT(LED_COL2) | SET_BIT(LED_COL3) | SET_BIT(LED_COL5))
 
-#define MATRIX_COLS_PORT1_MASK (1 << LED_COL4)
-
-#define _ROW(row, c1, c2, c3, c4, c5) \
-    _ROW_GPIO0(row, c1, c2, c3, c5), _ROW_GPIO1(c4)
-
-#define _ROW_GPIO0(row, c1, c2, c3, c5) \
-    ((1 << row) | ((!c1) << 28) | ((!c2) << 11) | ((!c3) << 31) | ((!c5) << 30))
-
-#define _ROW_GPIO1(c4) \
-    ((!c4) << 5)
+#define MATRIX_COL_PORT1_MASK SET_BIT(LED_COL4)
 
 #define PIN_CNF_DIR 0
 #define PIN_CNF_INPUT 1

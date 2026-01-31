@@ -61,8 +61,8 @@ void display_row(int row, uint8_t pattern)
         }
     }
 
-    GPIO0.OUTSET = MATRIX_COLS_PORT0_MASK;
-    GPIO1.OUTSET = MATRIX_COLS_PORT1_MASK;
+    GPIO0.OUTSET = MATRIX_COL_PORT0_MASK;
+    GPIO1.OUTSET = MATRIX_COL_PORT1_MASK;
     GPIO0.OUTCLR = MATRIX_ROW_MASK;
 
     GPIO0.OUTSET = mask_row;

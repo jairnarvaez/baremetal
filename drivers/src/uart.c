@@ -33,12 +33,12 @@ uart_rx_queue_t rx_queue = { 0 };
 
 void uart_init(const unsigned int BAUDRATE)
 {
-    GPIO1.DIRSET = _SET(PIN_TX);
+    GPIO1.DIRSET = SET_BIT(PIN_TX);
     GPIO1.PIN_CNF[PIN_TX] = (CNF_DIR_OUTPUT << PIN_CNF_DIR)
         | (CNF_INPUT_DISCONNECT << PIN_CNF_INPUT)
         | (CNF_PULL_DISABLED << PIN_CNF_PULL);
 
-    GPIO1.DIRCLR = _SET(PIN_RX);
+    GPIO1.DIRCLR = SET_BIT(PIN_RX);
     GPIO1.PIN_CNF[PIN_RX] = (CNF_DIR_INPUT << PIN_CNF_DIR)
         | (CNF_INPUT_CONNECT << PIN_CNF_INPUT)
         | (CNF_PULL_DISABLED << PIN_CNF_PULL);
