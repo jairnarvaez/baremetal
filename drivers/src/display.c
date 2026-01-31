@@ -4,8 +4,8 @@
 #include "utils.h"
 #include <stdint.h>
 
-const uint8_t ROWS[] = { ROW1, ROW2, ROW3, ROW4, ROW5 };
-const uint8_t COLS[] = { COL1, COL2, COL3, COL4, COL5 };
+const GPIO_LedMatrix_t ROWS[] = { LED_ROW1, LED_ROW2, LED_ROW3, LED_ROW4, LED_ROW5 };
+const GPIO_LedMatrix_t COLS[] = { LED_COL1, LED_COL2, LED_COL3, LED_COL4, LED_COL5 };
 
 uint8_t currentRow = 0;
 uint8_t buffer_row_value[5];
@@ -61,9 +61,9 @@ void display_row(int row, uint8_t pattern)
         }
     }
 
-    GPIO0.OUTSET = _COL_MASK_GPIO0;
-    GPIO1.OUTSET = _COL_MASK_GPIO1;
-    GPIO0.OUTCLR = _ROW_MASK_GPIO0;
+    GPIO0.OUTSET = MATRIX_COLS_PORT0_MASK;
+    GPIO1.OUTSET = MATRIX_COLS_PORT1_MASK;
+    GPIO0.OUTCLR = MATRIX_ROW_MASK;
 
     GPIO0.OUTSET = mask_row;
 
