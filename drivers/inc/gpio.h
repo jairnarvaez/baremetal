@@ -7,20 +7,6 @@
 #define GPIO0 (*(volatile struct _gpio*)BASE0)
 #define GPIO1 (*(volatile struct _gpio*)BASE1)
 
-typedef enum {
-    LED_ROW1 = 21,
-    LED_ROW2 = 22,
-    LED_ROW3 = 15,
-    LED_ROW4 = 24,
-    LED_ROW5 = 19,
-
-    LED_COL1 = 28,
-    LED_COL2 = 11,
-    LED_COL3 = 31,
-    LED_COL4 = 5,
-    LED_COL5 = 30,
-} GPIO_LedMatrix_t;
-
 struct _gpio {
     char _pad1[4]; // 0x500
     unsigned OUT; // 0x504
@@ -35,9 +21,59 @@ struct _gpio {
 };
 
 typedef enum {
-    LED_OFF = 0,
-    LED_ON = 1
-} LedState;
+    LED_ROW1 = 21,
+    LED_ROW2 = 22,
+    LED_ROW3 = 15,
+    LED_ROW4 = 24,
+    LED_ROW5 = 19,
+
+    LED_COL1 = 28,
+    LED_COL2 = 11,
+    LED_COL3 = 31,
+    LED_COL4 = 5,
+    LED_COL5 = 30,
+} GPIO_LedMatrix_t;
+
+typedef enum {
+    GPIO_DIR_INPUT = 0,
+    GPIO_DIR_OUTPUT = 1
+} GPIO_Dir_t;
+
+typedef enum {
+    GPIO_INPUT_CONNECT = 0,
+    GPIO_INPUT_DISCONNECT = 1
+} GPIO_Input_t;
+
+typedef enum {
+    GPIO_PULL_DISABLED = 0,
+    GPIO_PULL_DOWN = 1,
+    GPIO_PULL_UP = 3
+} GPIO_Pull_t;
+
+typedef enum {
+    GPIO_DRIVE_S0S1 = 0,
+    GPIO_DRIVE_H0S1 = 1,
+    GPIO_DRIVE_S0H1 = 2,
+    GPIO_DRIVE_H0H1 = 3,
+    GPIO_DRIVE_D0S1 = 4,
+    GPIO_DRIVE_D0H1 = 5,
+    GPIO_DRIVE_S0D1 = 6,
+    GPIO_DRIVE_H0D1 = 7
+} GPIO_Drive_t;
+
+typedef enum {
+    GPIO_SENSE_DISABLED = 0,
+    GPIO_SENSE_HIGH = 2,
+    GPIO_SENSE_LOW = 3
+} GPIO_Sense_t;
+
+typedef enum {
+    GPIO_CNF_POS_DIR = 0,
+    GPIO_CNF_POS_INPUT = 1,
+    GPIO_CNF_POS_PULL = 2,
+    GPIO_CNF_POS_DRIVE = 8,
+    GPIO_CNF_POS_SENSE = 16
+} GPIO_CnfPos_t;
 
 #define SET_BIT(p) (1 << (p))
 
@@ -47,16 +83,5 @@ typedef enum {
 
 #define MATRIX_COL_PORT1_MASK SET_BIT(LED_COL4)
 
-#define PIN_CNF_DIR 0
-#define PIN_CNF_INPUT 1
-#define PIN_CNF_PULL 2
-#define PIN_CNF_DRIVE 8
-#define PIN_CNF_SENSE 16
-
-#define CNF_DIR_INPUT 0
-#define CNF_DIR_OUTPUT 1
-#define CNF_INPUT_CONNECT 0
-#define CNF_INPUT_DISCONNECT 1
-#define CNF_PULL_DISABLED 0
-#define CNF_PULL_DOWN 1
-#define CNF_PULL_UP 3
+#define GPIO_PIN_CNF_PACK(dir, input, pull, drive, sense) \
+    (((dir) << GPIO_CNF_POS_DIR) | ((input) << GPIO_CNF_POS_INPUT) | ((pull) << GPIO_CNF_POS_PULL) | ((drive) << GPIO_CNF_POS_DRIVE) | ((sense) << GPIO_CNF_POS_SENSE))
