@@ -1,4 +1,4 @@
-#include "display.h"
+#include <stdint.h>
 
 extern const uint8_t PACMAN_OPEN[5];
 extern const uint8_t PACMAN_CLOSED[5];

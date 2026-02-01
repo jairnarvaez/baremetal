@@ -2,6 +2,7 @@
 #define UART_H
 
 #include <stdarg.h>
+#include <stddef.h>
 
 #define UART_TX_MODE_IRQ 1 // Cambiar a 1 para IRQ
 #define UART_RX_MODE_IRQ 1 // Cambiar a 1 para IRQ

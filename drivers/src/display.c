@@ -4,7 +4,6 @@
 #include "error.h"
 #include "gpio.h"
 #include "timer.h"
-#include "utils.h"
 
 #define LED_MASK0 0xd1688800
 #define LED_MASK1 0x00000020
@@ -107,7 +106,7 @@ void display_shift_left(void)
     }
 }
 
-void timer0_irqhandler(void)
+void TIMER0_irqhandler(void)
 {
     display_row(currentRow, 0b00000);
     currentRow = (currentRow + 1) % 5;

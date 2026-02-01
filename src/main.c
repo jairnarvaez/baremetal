@@ -1,5 +1,4 @@
 #include "uart.h"
-#include "utils.h"
 
 #define ECHO_BUFFER_SIZE 64
 

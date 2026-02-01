@@ -1,4 +1,5 @@
 #include "error.h"
+#include "display.h"
 
 static uint8_t ERROR[] = {
     0b11111,
