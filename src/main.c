@@ -3,10 +3,18 @@
 #include "display.h"
 #include "uart.h"
 
+typedef enum {
+    STATE_IDLE,
+    STATE_BUTTON_A,
+    STATE_BUTTON_B
+} app_state_t;
+
+static volatile app_state_t current_state = STATE_IDLE;
+
 int main(void)
 {
     uart_init(UART_BAUDRATE_115200);
-    buttons_init();
+    buttons_init_gpioe(GPIOE_CHANNEL_0, GPIOE_CHANNEL_1);
     display_init(60);
 
     uart_send("\r\n");
@@ -15,20 +23,41 @@ int main(void)
     uart_send("================================\r\n");
     uart_send("Button A: Heart (big)\r\n");
     uart_send("Button B: Heart (small)\r\n");
-    uart_send("No button: Smile\r\n");
     uart_send("Ready!\r\n\r\n");
 
-    display(SMILE);
+    for (;;) {
 
-    while (1) {
-        if (button_a_is_pressed()) {
+        switch (current_state) {
+
+        case STATE_IDLE:
+            break;
+
+        case STATE_BUTTON_A:
             display(HEART_BIG);
-        } else if (button_b_is_pressed()) {
+            break;
+
+        case STATE_BUTTON_B:
             display(HEART_SMALL);
-        } else {
-            display(SMILE);
+            break;
+
+        default:
+            break;
         }
     }
+}
 
-    return 0;
+void GPIOTE_Channel0_Callback(void)
+{
+    if (button_a_is_pressed()) {
+        uart_send("Button A pressed\r\n");
+        current_state = STATE_BUTTON_A;
+    }
+}
+
+void GPIOTE_Channel1_Callback(void)
+{
+    if (button_b_is_pressed()) {
+        uart_send("Button B pressed\r\n");
+        current_state = STATE_BUTTON_B;
+    }
 }
