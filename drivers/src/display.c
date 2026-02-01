@@ -1,4 +1,5 @@
 #include "display.h"
+#include "gpio.h"
 #include "timer.h"
 #include "uart.h"
 #include "utils.h"

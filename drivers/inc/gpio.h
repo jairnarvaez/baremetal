@@ -1,3 +1,8 @@
+#ifndef GPIO_H
+#define GPIO_H
+
+#include <stdint.h>
+
 #define BASE0 0x50000500
 #define BASE1 0x50000800
 
@@ -12,7 +17,7 @@ struct _gpio {
     unsigned OUT; // 0x504
     unsigned OUTSET; // 0x508
     unsigned OUTCLR; // 0x50C
-    char _pad2[4]; // 0x510
+    unsigned IN; // 0x510
     unsigned DIR; // 0x514
     unsigned DIRSET; // 0x518
     unsigned DIRCLR; // 0x51C
@@ -75,6 +80,11 @@ typedef enum {
     GPIO_CNF_POS_SENSE = 16
 } GPIO_CnfPos_t;
 
+typedef enum {
+    GPIO_PIN_LOW = 0,
+    GPIO_PIN_HIGH = 1
+} GPIO_PinState_t;
+
 #define SET_BIT(p) (1 << (p))
 
 #define MATRIX_ROW_MASK (SET_BIT(LED_ROW1) | SET_BIT(LED_ROW2) | SET_BIT(LED_ROW3) | SET_BIT(LED_ROW4) | SET_BIT(LED_ROW5))
@@ -85,3 +95,53 @@ typedef enum {
 
 #define GPIO_PIN_CNF_PACK(dir, input, pull, drive, sense) \
     (((dir) << GPIO_CNF_POS_DIR) | ((input) << GPIO_CNF_POS_INPUT) | ((pull) << GPIO_CNF_POS_PULL) | ((drive) << GPIO_CNF_POS_DRIVE) | ((sense) << GPIO_CNF_POS_SENSE))
+
+static inline void GPIO_Output(volatile struct _gpio* port, uint32_t pin)
+{
+    port->PIN_CNF[pin] = GPIO_PIN_CNF_PACK(
+        GPIO_DIR_OUTPUT,
+        GPIO_INPUT_DISCONNECT,
+        GPIO_PULL_DISABLED,
+        GPIO_DRIVE_S0S1,
+        GPIO_SENSE_DISABLED);
+}
+
+static inline void GPIO_Input(volatile struct _gpio* port, uint32_t pin, GPIO_Pull_t pull)
+{
+    port->PIN_CNF[pin] = GPIO_PIN_CNF_PACK(
+        GPIO_DIR_INPUT,
+        GPIO_INPUT_CONNECT,
+        pull,
+        GPIO_DRIVE_S0S1,
+        GPIO_SENSE_DISABLED);
+}
+
+static inline void GPIO_Write(volatile struct _gpio* port, uint32_t pin, GPIO_PinState_t state)
+{
+    if (state == GPIO_PIN_HIGH) {
+        port->OUTSET = SET_BIT(pin);
+    } else {
+        port->OUTCLR = SET_BIT(pin);
+    }
+}
+
+static inline uint32_t GPIO_Read(volatile struct _gpio* port, uint32_t pin)
+{
+    return (port->IN >> pin) & 1;
+}
+
+static inline void GPIO_Toggle(volatile struct _gpio* port, uint32_t pin)
+{
+    port->OUT ^= SET_BIT(pin);
+}
+
+static inline void GPIO_Config_Mask(volatile struct _gpio* port, uint32_t mask, uint32_t config)
+{
+    for (uint32_t pin = 0; pin < 32; pin++) {
+        if (mask & (1UL << pin)) {
+            port->PIN_CNF[pin] = config;
+        }
+    }
+}
+
+#endif

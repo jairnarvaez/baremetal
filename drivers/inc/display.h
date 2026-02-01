@@ -1,7 +1,6 @@
 #include <stdint.h>
 
 #include "delay.h"
-#include "gpio.h"
 
 #define REFRESH_RATE_HZ 60
 
