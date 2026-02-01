@@ -1,3 +1,6 @@
+#ifndef TIMER_H
+#define TIMER_H
+
 #include <stdint.h>
 
 #define BASETIMER0 0x40008000
@@ -37,3 +40,5 @@ struct _timer {
 };
 
 void timer_init(uint32_t interval_us);
+
+#endif

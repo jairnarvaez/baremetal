@@ -1,3 +1,6 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 #include <stdarg.h>
 #include <stdint.h>
 #include <string.h>
@@ -9,3 +12,5 @@ void int2string(int num, char* str);
 int string_length(const char* str);
 int concat_string(char* dest, size_t dest_size, const char* src);
 int vsconcat_strings(char* dest, size_t dest_size, const char* first, va_list args);
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef UART_H
+#define UART_H
+
 #include <stdarg.h>
 
 #define UART_TX_MODE_IRQ 1 // Cambiar a 1 para IRQ
@@ -125,3 +128,5 @@ void uart_tx_irq(const char* str, ...);
 void uart_rx_irq(char* buffer, const unsigned int num_bytes);
 
 void UARTE0_IRQHandler(void);
+
+#endif
