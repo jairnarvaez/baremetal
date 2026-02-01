@@ -172,6 +172,20 @@ static inline uint32_t GPIO_Read(volatile struct _gpio* port, uint32_t pin)
     return (port->IN >> pin) & 1;
 }
 
+static inline void GPIO_Write_Mask(volatile struct _gpio* port, uint32_t mask, GPIO_PinState_t state)
+{
+    if (state == GPIO_PIN_HIGH) {
+        port->OUTSET = mask;
+    } else {
+        port->OUTCLR = mask;
+    }
+}
+
+static inline uint32_t GPIO_Read_Mask(volatile struct _gpio* port, uint32_t mask)
+{
+    return port->IN & mask;
+}
+
 static inline void GPIO_Toggle(volatile struct _gpio* port, uint32_t pin)
 {
     port->OUT ^= SET_BIT(pin);

@@ -15,37 +15,40 @@ const GPIO_LedMatrix_t COLS[] = { LED_COL1, LED_COL2, LED_COL3, LED_COL4, LED_CO
 uint8_t currentRow = 0;
 uint8_t buffer_row_value[5];
 
-void display_row(int row, uint8_t pattern)
+static void display_row(int row, uint8_t pattern)
 {
-    if (row < 0 || row >= 5) {
+    if (row < 0 || row >= DISPLAY_ROWS) {
         error_blink();
         return;
     }
 
-    uint32_t mask_row = (1 << ROWS[row]);
+    uint32_t mask_row = SET_BIT(ROWS[row]);
     uint32_t mask_cols_p0 = 0;
     uint32_t mask_cols_p1 = 0;
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < DISPLAY_COLS; i++) {
         if ((pattern >> (4 - i)) & 1) {
             if (i == 3) {
-                mask_cols_p1 |= (1 << COLS[i]);
+                mask_cols_p1 |= SET_BIT(COLS[i]);
             } else {
-                mask_cols_p0 |= (1 << COLS[i]);
+                mask_cols_p0 |= SET_BIT(COLS[i]);
             }
         }
     }
 
-    GPIO0.OUTSET = MATRIX_COL_PORT0_MASK;
-    GPIO1.OUTSET = MATRIX_COL_PORT1_MASK;
-    GPIO0.OUTCLR = MATRIX_ROW_MASK;
+    GPIO_Write_Mask(&GPIO0, MATRIX_COL_PORT0_MASK, GPIO_PIN_HIGH);
+    GPIO_Write_Mask(&GPIO1, MATRIX_COL_PORT1_MASK, GPIO_PIN_HIGH);
 
-    GPIO0.OUTSET = mask_row;
+    GPIO_Write_Mask(&GPIO0, MATRIX_ROW_MASK, GPIO_PIN_LOW);
 
-    if (mask_cols_p0)
-        GPIO0.OUTCLR = mask_cols_p0;
-    if (mask_cols_p1)
-        GPIO1.OUTCLR = mask_cols_p1;
+    GPIO_Write_Mask(&GPIO0, mask_row, GPIO_PIN_HIGH);
+
+    if (mask_cols_p0) {
+        GPIO_Write_Mask(&GPIO0, mask_cols_p0, GPIO_PIN_LOW);
+    }
+    if (mask_cols_p1) {
+        GPIO_Write_Mask(&GPIO1, mask_cols_p1, GPIO_PIN_LOW);
+    }
 }
 
 void display(const uint8_t* row)
