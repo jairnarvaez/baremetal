@@ -6,9 +6,6 @@
 #define BASE0 0x50000500
 #define BASE1 0x50000800
 
-#define LED_MASK0 0xd1688800
-#define LED_MASK1 0x00000020
-
 #define GPIO0 (*(volatile struct _gpio*)BASE0)
 #define GPIO1 (*(volatile struct _gpio*)BASE1)
 
@@ -24,20 +21,6 @@ struct _gpio {
     char _pad3[480]; // 0x520
     unsigned PIN_CNF[32]; // 0x700
 };
-
-typedef enum {
-    LED_ROW1 = 21,
-    LED_ROW2 = 22,
-    LED_ROW3 = 15,
-    LED_ROW4 = 24,
-    LED_ROW5 = 19,
-
-    LED_COL1 = 28,
-    LED_COL2 = 11,
-    LED_COL3 = 31,
-    LED_COL4 = 5,
-    LED_COL5 = 30,
-} GPIO_LedMatrix_t;
 
 typedef enum {
     GPIO_DIR_INPUT = 0,
