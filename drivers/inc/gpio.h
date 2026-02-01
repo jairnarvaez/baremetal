@@ -99,6 +99,65 @@ static inline void GPIO_Input(volatile struct _gpio* port, uint32_t pin, GPIO_Pu
         GPIO_SENSE_DISABLED);
 }
 
+static inline void GPIO_Config(volatile struct _gpio* port, uint32_t pin, uint32_t dir, uint32_t input, uint32_t pull, uint32_t drive, uint32_t sense)
+{
+    port->PIN_CNF[pin] = GPIO_PIN_CNF_PACK(
+        dir,
+        input,
+        pull,
+        drive,
+        sense);
+}
+
+static inline void GPIO_Set_Direction(volatile struct _gpio* port, uint32_t pin, GPIO_Dir_t dir)
+{
+    uint32_t config = port->PIN_CNF[pin];
+    config &= ~(1UL << GPIO_CNF_POS_DIR);
+    config |= (dir << GPIO_CNF_POS_DIR);
+    port->PIN_CNF[pin] = config;
+}
+
+static inline void GPIO_Set_Input(volatile struct _gpio* port, uint32_t pin, GPIO_Input_t input)
+{
+    uint32_t config = port->PIN_CNF[pin];
+    config &= ~(1UL << GPIO_CNF_POS_INPUT);
+    config |= (input << GPIO_CNF_POS_INPUT);
+    port->PIN_CNF[pin] = config;
+}
+
+static inline void GPIO_Set_Pull(volatile struct _gpio* port, uint32_t pin, GPIO_Pull_t pull)
+{
+    uint32_t config = port->PIN_CNF[pin];
+    config &= ~(3UL << GPIO_CNF_POS_PULL);
+    config |= (pull << GPIO_CNF_POS_PULL);
+    port->PIN_CNF[pin] = config;
+}
+
+static inline void GPIO_Set_Drive(volatile struct _gpio* port, uint32_t pin, GPIO_Drive_t drive)
+{
+    uint32_t config = port->PIN_CNF[pin];
+    config &= ~(7UL << GPIO_CNF_POS_DRIVE);
+    config |= (drive << GPIO_CNF_POS_DRIVE);
+    port->PIN_CNF[pin] = config;
+}
+
+static inline void GPIO_Set_Sense(volatile struct _gpio* port, uint32_t pin, GPIO_Sense_t sense)
+{
+    uint32_t config = port->PIN_CNF[pin];
+    config &= ~(3UL << GPIO_CNF_POS_SENSE);
+    config |= (sense << GPIO_CNF_POS_SENSE);
+    port->PIN_CNF[pin] = config;
+}
+
+static inline void GPIO_Config_Mask(volatile struct _gpio* port, uint32_t mask, uint32_t config)
+{
+    for (uint32_t pin = 0; pin < 32; pin++) {
+        if (mask & (1UL << pin)) {
+            port->PIN_CNF[pin] = config;
+        }
+    }
+}
+
 static inline void GPIO_Write(volatile struct _gpio* port, uint32_t pin, GPIO_PinState_t state)
 {
     if (state == GPIO_PIN_HIGH) {
@@ -116,15 +175,6 @@ static inline uint32_t GPIO_Read(volatile struct _gpio* port, uint32_t pin)
 static inline void GPIO_Toggle(volatile struct _gpio* port, uint32_t pin)
 {
     port->OUT ^= SET_BIT(pin);
-}
-
-static inline void GPIO_Config_Mask(volatile struct _gpio* port, uint32_t mask, uint32_t config)
-{
-    for (uint32_t pin = 0; pin < 32; pin++) {
-        if (mask & (1UL << pin)) {
-            port->PIN_CNF[pin] = config;
-        }
-    }
 }
 
 #endif
