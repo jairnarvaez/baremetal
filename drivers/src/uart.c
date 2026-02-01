@@ -2,6 +2,7 @@
 #include "gpio.h"
 #include "nvic.h"
 #include "utils.h"
+#include <stdint.h>
 #include <string.h>
 
 __attribute__((weak)) void on_receive_msg(size_t bytes)
@@ -33,16 +34,20 @@ uart_rx_queue_t rx_queue = { 0 };
 
 void uart_init(const unsigned int BAUDRATE)
 {
-    GPIO1.DIRSET = SET_BIT(PIN_TX);
-    GPIO1.PIN_CNF[PIN_TX] = GPIO_PIN_CNF_PACK(
+
+    GPIO_Set_Direction(&GPIO1, PIN_TX, GPIO_DIR_OUTPUT);
+    GPIO_Set_Direction(&GPIO1, PIN_RX, GPIO_DIR_INPUT);
+
+    GPIO_Config(&GPIO1,
+        PIN_TX,
         GPIO_DIR_OUTPUT,
         GPIO_INPUT_DISCONNECT,
         GPIO_PULL_DISABLED,
         GPIO_DRIVE_S0S1,
         GPIO_SENSE_DISABLED);
 
-    GPIO1.DIRCLR = SET_BIT(PIN_RX);
-    GPIO1.PIN_CNF[PIN_RX] = GPIO_PIN_CNF_PACK(
+    GPIO_Config(&GPIO1,
+        PIN_RX,
         GPIO_DIR_OUTPUT,
         GPIO_INPUT_DISCONNECT,
         GPIO_PULL_DISABLED,
