@@ -14,7 +14,7 @@ static volatile app_state_t current_state = STATE_IDLE;
 int main(void)
 {
     uart_init(UART_BAUDRATE_115200);
-    buttons_init_gpioe(GPIOE_CHANNEL_0, GPIOE_CHANNEL_1);
+    buttons_init_gpiote(GPIOET_CHANNEL_0, GPIOET_CHANNEL_1);
     display_init(60);
 
     uart_send("\r\n");

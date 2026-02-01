@@ -2,7 +2,7 @@
 #define BUTTONS_H
 
 #include "gpio.h"
-#include "gpioe.h"
+#include "gpiote.h"
 #include "nvic.h"
 
 #define BUTTON_A_PIN 14
@@ -17,15 +17,15 @@ static inline void buttons_init(void)
     GPIO_Input(&GPIO0, BUTTON_B_PIN, GPIO_PULL_UP);
 }
 
-static inline void buttons_init_gpioe(GPIOE_Channel_t channel_Button_A, GPIOE_Channel_t channel_Button_B)
+static inline void buttons_init_gpiote(GPIOET_Channel_t channel_Button_A, GPIOET_Channel_t channel_Button_B)
 {
     GPIO_Input(&GPIO0, BUTTON_A_PIN, GPIO_PULL_UP);
     GPIO_Input(&GPIO0, BUTTON_B_PIN, GPIO_PULL_UP);
 
-    GPIOTE_ConfigEvent(&GPIOE, channel_Button_A, BUTTON_A_PIN, GPIOE_PORT_0, GPIOE_POLARITY_TOGGLE);
-    GPIOTE_ConfigEvent(&GPIOE, channel_Button_B, BUTTON_B_PIN, GPIOE_PORT_0, GPIOE_POLARITY_TOGGLE);
+    GPIOTE_ConfigEvent(&GPIOET, channel_Button_A, BUTTON_A_PIN, GPIOET_PORT_0, GPIOET_POLARITY_TOGGLE);
+    GPIOTE_ConfigEvent(&GPIOET, channel_Button_B, BUTTON_B_PIN, GPIOET_PORT_0, GPIOET_POLARITY_TOGGLE);
 
-    GPIOE.INTENSET = (1 << 0) | (1 << 1) | (1 << 31);
+    GPIOET.INTENSET = (1 << 0) | (1 << 1) | (1 << 31);
     NVIC_EnableIRQ(6);
 }
 
