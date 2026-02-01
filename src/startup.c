@@ -18,6 +18,7 @@ int main(void);
 void reset_handler(void);
 void TIMER0_irqhandler(void);
 void UARTE0_IRQHandler(void);
+void GPIOE_IRQHandler(void);
 
 void default_handler(void)
 {
@@ -44,7 +45,9 @@ __attribute__((section(".isr_vector"))) uint32_t vectors[] = {
 
     [16 ... 17] = 0,
     [18] = (uint32_t)&UARTE0_IRQHandler,
-    [19 ... 23] = 0,
+    [19 ... 21] = 0,
+    [22] = (uint32_t)&GPIOE_IRQHandler,
+    [23] = 0,
     [24] = (uint32_t)&TIMER0_irqhandler
 };
 
