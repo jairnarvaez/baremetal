@@ -81,6 +81,15 @@ int string_length(const char* str)
     return len;
 }
 
+int string_compare(const char* s1, const char* s2)
+{
+    while (*s1 && (*s1 == *s2)) {
+        s1++;
+        s2++;
+    }
+    return *(const unsigned char*)s1 - *(const unsigned char*)s2;
+}
+
 int concat_string(char* dest, size_t dest_size, const char* src)
 {
     if (!dest || !src || dest_size == 0)
