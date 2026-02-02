@@ -12,6 +12,10 @@ void test_delay(uint32_t interval_us)
 
     uart_init(UART_BAUDRATE_115200);
 
+    uart_send("================================\r\n");
+    uart_send("   micro:bit v2 - Delay Test    \r\n");
+    uart_send("================================\r\n");
+
     GPIO_Output(&GPIO0, LED_ROW3);
     GPIO_Output(&GPIO0, LED_COL3);
 
