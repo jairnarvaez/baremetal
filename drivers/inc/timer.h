@@ -15,6 +15,12 @@
 #define TIMER3 (*(volatile struct _timer*)BASETIMER3)
 #define TIMER4 (*(volatile struct _timer*)BASETIMER4)
 
+#define TIMER0_IRQn 8
+#define TIMER1_IRQn 9
+#define TIMER2_IRQn 10
+#define TIMER3_IRQn 26
+#define TIMER4_IRQn 27
+
 struct _timer {
     unsigned TASKS_START; // 0x000
     unsigned TASKS_STOP; // 0x004
@@ -38,6 +44,155 @@ struct _timer {
     char _pad7[44];
     unsigned CC[6]; // 0x540
 };
+
+typedef enum {
+    TIMER_MODE_TIMER = 0,
+    TIMER_MODE_COUNTER = 1,
+    TIMER_MODE_LOW_POWER_COUNTER = 2
+} timer_mode_t;
+
+typedef enum {
+    TIMER_BITMODE_16BIT = 0,
+    TIMER_BITMODE_08BIT = 1,
+    TIMER_BITMODE_24BIT = 2,
+    TIMER_BITMODE_32BIT = 3
+} timer_bitmode_t;
+
+typedef enum {
+    TIMER_PRESCALER_1MHz = 4, // 1 tick = 1 µs
+    TIMER_PRESCALER_500kHz = 5, // 1 tick = 2 µs
+    TIMER_PRESCALER_250kHz = 6, // 1 tick = 4 µs
+    TIMER_PRESCALER_125kHz = 7, // 1 tick = 8 µs
+    TIMER_PRESCALER_62500Hz = 8, // 1 tick = 16 µs
+    TIMER_PRESCALER_31250Hz = 9, // 1 tick = 32 µs
+} timer_prescaler_t;
+
+typedef enum {
+    TIMER_INT_COMPARE0 = 16,
+    TIMER_INT_COMPARE1 = 17,
+    TIMER_INT_COMPARE2 = 18,
+    TIMER_INT_COMPARE3 = 19,
+    TIMER_INT_COMPARE4 = 20,
+    TIMER_INT_COMPARE5 = 21,
+} timer_interrupt_t;
+
+typedef enum {
+    TIMER_SHORT_COMPARE0_CLEAR = 0,
+    TIMER_SHORT_COMPARE1_CLEAR = 1,
+    TIMER_SHORT_COMPARE2_CLEAR = 2,
+    TIMER_SHORT_COMPARE3_CLEAR = 3,
+    TIMER_SHORT_COMPARE4_CLEAR = 4,
+    TIMER_SHORT_COMPARE5_CLEAR = 5,
+    TIMER_SHORT_COMPARE0_STOP = 8,
+    TIMER_SHORT_COMPARE1_STOP = 9,
+    TIMER_SHORT_COMPARE2_STOP = 10,
+    TIMER_SHORT_COMPARE3_STOP = 11,
+    TIMER_SHORT_COMPARE4_STOP = 12,
+    TIMER_SHORT_COMPARE5_STOP = 13,
+} timer_shortcut_t;
+
+static inline void TIMER_Start(volatile struct _timer* timer)
+{
+    timer->TASKS_START = 1;
+}
+
+static inline void TIMER_Stop(volatile struct _timer* timer)
+{
+    timer->TASKS_STOP = 1;
+}
+
+static inline void TIMER_Clear(volatile struct _timer* timer)
+{
+    timer->TASKS_CLEAR = 1;
+}
+
+static inline void TIMER_Shutdown(volatile struct _timer* timer)
+{
+    timer->TASKS_SHUTDOWN = 1;
+}
+
+static inline void TIMER_SetMode(volatile struct _timer* timer, timer_mode_t mode)
+{
+    timer->MODE = mode;
+}
+
+static inline void TIMER_SetBitMode(volatile struct _timer* timer, timer_bitmode_t bitmode)
+{
+    timer->BITMODE = bitmode;
+}
+
+static inline void TIMER_SetPrescaler(volatile struct _timer* timer, uint32_t prescaler)
+{
+    timer->PRESCALER = prescaler & 0xF;
+}
+
+static inline void TIMER_SetCompare(volatile struct _timer* timer, uint8_t channel, uint32_t value)
+{
+    if (channel < 6) {
+        timer->CC[channel] = value;
+    }
+}
+
+static inline uint32_t TIMER_GetCounter(volatile struct _timer* timer, uint8_t channel)
+{
+    if (channel < 6) {
+        timer->TASKS_CAPTURE[channel] = 1;
+        return timer->CC[channel];
+    }
+    return 0;
+}
+
+static inline void TIMER_EnableShortcut(volatile struct _timer* timer, timer_shortcut_t shortcut)
+{
+    timer->SHORTS |= (1 << shortcut);
+}
+
+static inline void TIMER_DisableShortcut(volatile struct _timer* timer, timer_shortcut_t shortcut)
+{
+    timer->SHORTS &= ~(1 << shortcut);
+}
+
+static inline void TIMER_EnableInterrupt(volatile struct _timer* timer, timer_interrupt_t interrupt)
+{
+    timer->INTENSET = (1 << interrupt);
+}
+
+static inline void TIMER_DisableInterrupt(volatile struct _timer* timer, timer_interrupt_t interrupt)
+{
+    timer->INTENCLR = (1 << interrupt);
+}
+
+static inline void TIMER_ClearEvent(volatile struct _timer* timer, uint8_t channel)
+{
+    if (channel < 6) {
+        timer->EVENTS_COMPARE[channel] = 0;
+    }
+}
+
+static inline uint8_t TIMER_EventPending(volatile struct _timer* timer, uint8_t channel)
+{
+    if (channel < 6) {
+        return (timer->EVENTS_COMPARE[channel] != 0);
+    }
+    return 0;
+}
+
+static inline void TIMER_InitInterval(volatile struct _timer* timer, uint32_t interval_us)
+{
+    TIMER_Stop(timer);
+    TIMER_Clear(timer);
+    TIMER_SetMode(timer, TIMER_MODE_TIMER);
+    TIMER_SetBitMode(timer, TIMER_BITMODE_32BIT);
+    TIMER_SetPrescaler(timer, TIMER_PRESCALER_1MHz); // 1 tick = 1 µs
+    TIMER_SetCompare(timer, 0, interval_us);
+    TIMER_EnableShortcut(timer, TIMER_SHORT_COMPARE0_CLEAR);
+}
+
+static inline void TIMER_InitFrequency(volatile struct _timer* timer, uint32_t frequency_hz)
+{
+    uint32_t interval_us = 1000000 / frequency_hz;
+    TIMER_InitInterval(timer, interval_us);
+}
 
 void timer_init(uint32_t interval_us);
 
