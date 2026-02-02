@@ -10,9 +10,9 @@ CFLAGS = -O -g -Wall -ffreestanding
 
 BUILD_DIR = build
 
-SRC_DIRS = src drivers/src apps
+SRC_DIRS = src drivers/src apps tests
 SRCS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c))
-INCLUDE_DIRS = src drivers/inc apps
+INCLUDE_DIRS = src drivers/inc apps tests
 INCLUDES = $(addprefix -I, $(INCLUDE_DIRS))
 
 OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
