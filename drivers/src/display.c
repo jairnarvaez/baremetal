@@ -3,6 +3,7 @@
 #include "display.h"
 #include "error.h"
 #include "gpio.h"
+#include "nvic.h"
 #include "timer.h"
 
 #define LED_MASK0 0xd1688800
@@ -64,6 +65,16 @@ void display_clear()
     }
 }
 
+void display_timer_init(uint32_t interval_us)
+{
+    TIMER_InitInterval(&TIMER0, interval_us);
+
+    TIMER_EnableInterrupt(&TIMER0, TIMER_INT_COMPARE0);
+    NVIC_EnableIRQ(TIMER0_IRQn);
+
+    TIMER_Start(&TIMER0);
+}
+
 void display_init(uint32_t refresh_rate_hz)
 {
     uint32_t pin_config = GPIO_PIN_CNF_PACK(
@@ -76,7 +87,7 @@ void display_init(uint32_t refresh_rate_hz)
     GPIO_Config_Mask(&GPIO0, MATRIX_ROW_MASK | MATRIX_COL_PORT0_MASK, pin_config);
     GPIO_Config_Mask(&GPIO1, MATRIX_COL_PORT1_MASK, pin_config);
 
-    timer_init(1000000 / (refresh_rate_hz * DISPLAY_ROWS));
+    display_timer_init(1000000 / (refresh_rate_hz * DISPLAY_ROWS));
 }
 
 void display_set_pixel(uint8_t x, uint8_t y, uint8_t state)
