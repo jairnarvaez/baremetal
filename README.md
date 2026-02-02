@@ -3,10 +3,18 @@ This project is part of my personal journey into embedded systems development. I
 
 ## Features
 This firmware provides the following functionalities:
-- **UART communication:** supports both polling and interrupt-driven transmission and reception.
-- **GPIO drivers:** for controlling the GPIO pins.
+- **Timer API**: Hardware timer management supporting multiple channels (CC).
+   - Simplified periodic task execution (Run/Stop/Init).
+   - Interrupt-driven events for precise timing.
+   - Auto-clear shortcuts for consistent frequency generation.
+- **UART API:** Custom driver for serial communication.
+   - Supports both polling and interrupt-driven transmission/reception.
+- **GPIO API:** Direct register-level control for GPIO pins.
+- **GPIOTE API**: Hardware-level bridge between GPIO pins and the event system.
+   - Supports pin state change detection (rising, falling, or toggle) via hardware events.
+   - Enables low-power wake-up and direct task triggering without CPU intervention.
 - **Delay functions:** for creating delays in the code.
-- **LED matrix animations:** a set of animations for the 5x5 LED matrix.
+- **LED matrix animations:** Custom 5x5 LED matrix engine and animations.
 
 ## Prerequisites
 ### Installing PyOCD on Arch Linux
