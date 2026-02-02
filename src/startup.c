@@ -17,6 +17,10 @@ extern uint32_t _sixram;
 int main(void);
 void reset_handler(void);
 void TIMER0_irqhandler(void);
+void TIMER1_irqhandler(void) { }
+void TIMER2_irqhandler(void) { }
+void TIMER3_irqhandler(void) { }
+void TIMER4_irqhandler(void) { }
 void UARTE0_IRQHandler(void);
 void GPIOET_IRQHandler(void);
 
@@ -48,7 +52,12 @@ __attribute__((section(".isr_vector"))) uint32_t vectors[] = {
     [19 ... 21] = 0,
     [22] = (uint32_t)&GPIOET_IRQHandler,
     [23] = 0,
-    [24] = (uint32_t)&TIMER0_irqhandler
+    [24] = (uint32_t)&TIMER0_irqhandler,
+    [25] = (uint32_t)&TIMER1_irqhandler,
+    [26] = (uint32_t)&TIMER2_irqhandler,
+    [27 ... 41] = 0,
+    [42] = (uint32_t)&TIMER3_irqhandler,
+    [43] = (uint32_t)&TIMER4_irqhandler,
 };
 
 void reset_handler(void)
