@@ -55,7 +55,7 @@ void int2string(int num, char* str)
 
     if (num < 0) {
         str[i++] = '-';
-        n = (unsigned int)(-num);
+        n = -(unsigned int)(num);
     } else {
         n = (unsigned int)num;
     }
@@ -70,6 +70,37 @@ void int2string(int num, char* str)
     str[i] = '\0';
 
     reverse_string(&str[start_digits], i - start_digits);
+}
+
+void float2string(float num, int decimals, char* str)
+{
+    int i = 0;
+
+    if (num < 0) {
+        str[i++] = '-';
+        num = -num;
+    }
+
+    int int_part = (int)num;
+    float dec_part = num - int_part;
+
+    char buf_int[12];
+    int2string(int_part, buf_int);
+    int j = 0;
+    while (buf_int[j] != '\0') {
+        str[i++] = buf_int[j++];
+    }
+
+    str[i++] = '.';
+
+    for (int d = 0; d < decimals; d++) {
+        dec_part *= 10;
+        int digit = (int)dec_part;
+        str[i++] = digit + '0';
+        dec_part -= digit;
+    }
+
+    str[i] = '\0';
 }
 
 int string_length(const char* str)
