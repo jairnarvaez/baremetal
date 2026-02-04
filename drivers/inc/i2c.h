@@ -1,11 +1,15 @@
 #ifndef I2C_H
 #define I2C_H
 
+#include <sys/types.h>
 #define BASE0 0x40003000
 #define BASE1 0x40004000
 
 #define I2C0 (*(volatile struct _twim*)BASE0)
 #define I2C1 (*(volatile struct _twim*)BASE1)
+
+#define PIN_SCL 8
+#define PIN_SDA 16
 
 struct _twim {
     unsigned TASKS_STARTRX; // 0x000
@@ -54,5 +58,20 @@ struct _twim {
     char _pad15[0x034]; // 0x554 - 0x587
     unsigned ADDRESS; // 0x588
 };
+
+typedef enum {
+    TWIM_FREQ_100KBPS = 0x01980000,
+    TWIM_FREQ_250KBPS = 0x04000000,
+    TWIM_FREQ_400KBPS = 0x06400000,
+} Twim_Frequency_t;
+
+typedef enum {
+    TWIM_DISABLED = 0,
+    TWIM_ENABLED = 6,
+} Twim_Enable_t;
+
+void i2c_init(Twim_Frequency_t frequency);
+int i2c_write(uint32_t address, uint8_t* buffer, uint8_t size);
+int i2c_read(uint32_t address, uint8_t* buffer, uint8_t size);
 
 #endif
