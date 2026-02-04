@@ -19,6 +19,10 @@ int test_lsm303(void)
 
     uart_send("\rInitiating communication with the sensor\r\n");
 
+    lsm303_tmp_init();
+    int temp_sensor = 0;
+    char buffer_temp_sensor[10];
+
     for (;;) {
         data = lsm_acc_get_acceleration();
 
@@ -35,6 +39,10 @@ int test_lsm303(void)
         uart_send(str_buf);
 
         uart_send("       \r\n");
+
+        temp_sensor = lsm303_acc_get_temperature();
+        int2string(temp_sensor, buffer_temp_sensor);
+        uart_send("Temp: ", buffer_temp_sensor, "\r\n");
         delay(1000000);
     }
 

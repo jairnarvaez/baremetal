@@ -15,7 +15,7 @@ This firmware provides the following functionalities:
    - Enables low-power wake-up and direct task triggering without CPU intervention.
 - **I2C API:** Polling-based master driver for serial communication.
    - Supports read/write primitives with repeated start and hardware error detection.
-- **LSM303AGR Driver:** Hardware abstraction for the 3-axis accelerometer.
+- **LSM303AGR Driver:** Hardware abstraction for the 3-axis accelerometer and thermal sensor..
    - Features bit-field register mapping and LUT-based sensitivity scaling up to ±16g.
 - **Delay functions:** for creating delays in the code.
 - **LED matrix animations:** Custom 5x5 LED matrix engine and animations.

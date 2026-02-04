@@ -8,6 +8,9 @@
 
 #define LSM303_AUTO_INCREMENT 0x80
 
+#define LSM_TEMP_OFFSET 15
+#define LSM_TEMP_ENABLE (0x03 << 6)
+
 typedef enum {
     STATUS_REG_AUX_A = 0x07,
     OUT_TEMP_L_A = 0x0C,
@@ -132,11 +135,12 @@ typedef struct {
 } lsm_acc_data_t;
 
 int lsm303_acc_init(uint8_t lsm_operating_mode);
+void lsm303_tmp_init(void);
 
 void lsm303_acc_get_raw_data(int16_t* ax, int16_t* ay, int16_t* az);
 
 lsm_acc_data_t lsm_acc_get_acceleration();
-float lsm303_acc_get_temperature(void);
+int lsm303_acc_get_temperature(void);
 
 uint8_t lsm303_acc_read_reg(LSM_Registers_t reg);
 void lsm303_acc_write_reg(LSM_Registers_t reg, uint8_t value);

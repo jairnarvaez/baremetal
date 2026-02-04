@@ -124,3 +124,17 @@ int lsm303_acc_init(uint8_t lsm_operating_mode)
 
     return 0;
 }
+
+void lsm303_tmp_init()
+{
+    lsm303_acc_write_reg(TEMP_CFG_REG_A, LSM_TEMP_ENABLE);
+}
+
+int lsm303_acc_get_temperature(void)
+{
+    uint8_t buffer[2];
+    lsm_acc_read_mult(OUT_TEMP_L_A, buffer, 2);
+
+    int16_t raw_tmp = buffer[1] << 8 | buffer[0];
+    return (raw_tmp >> 8) + LSM_TEMP_OFFSET;
+}
