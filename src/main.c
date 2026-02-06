@@ -1,6 +1,6 @@
 #include "power.h"
-#include "test_buttons.h"
 #include "test_delay.h"
+#include "test_gpiote.h"
 #include "test_lsm303.h"
 #include "test_uart.h"
 
