@@ -18,7 +18,6 @@ This firmware provides the following functionalities:
 - **LSM303AGR Driver:** Hardware abstraction for the 3-axis accelerometer and thermal sensor..
    - Features bit-field register mapping and LUT-based sensitivity scaling up to ±16g.
 - **Delay functions:** for creating delays in the code.
-- **LED matrix animations:** Custom 5x5 LED matrix engine and animations.
 
 ## Prerequisites
 ### Installing PyOCD on Arch Linux
