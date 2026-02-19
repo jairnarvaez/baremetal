@@ -2,6 +2,10 @@
 #include "ppi.h"
 #include "uart.h"
 
+// NOTE: UART_RX_MODE_IRQ and UART_TX_MODE_IRQ must be set to 0 in uart.h
+// PPI echo relies on SHORTS (ENDRX->STARTRX), which is broken by the ISR
+// calling TASKS_STOPRX on ENDRX event.
+
 char buffer[1];
 
 void test_echo()
