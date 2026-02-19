@@ -1,8 +1,8 @@
 #ifndef PPI_H
 #define PPI_H
 
-#define BASE 0x4001F000
-#define PPI (*(volatile struct _ppi*)BASE)
+#define BASE_PPI 0x4001F000
+#define PPI (*(volatile struct _ppi*)BASE_PPI)
 
 typedef struct {
     unsigned ENABLE; // 0x000
