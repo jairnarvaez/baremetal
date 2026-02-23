@@ -76,6 +76,21 @@ static void handle_gpio(int argc, char** argv)
     }
 }
 
+typedef void (*handler_fn)(int argc, char** argv);
+
+typedef struct {
+    const char* name;
+    handler_fn handler;
+} command_t;
+
+static const command_t commands[] = {
+    { "GPIO", handle_gpio },
+    // { "I2C",    handle_i2c    },
+    // { "GPIOTE", handle_gpiote },
+};
+
+#define CMD_COUNT (sizeof(commands) / sizeof(commands[0]))
+
 void router_process(char* line)
 {
     char* argv[MAX_ARGS];
@@ -84,8 +99,12 @@ void router_process(char* line)
     if (argc == 0)
         return;
 
-    if (string_compare(argv[0], "GPIO") == 0)
-        handle_gpio(argc, argv);
-    else
-        uart_send("ERR 01\n");
+    for (int i = 0; i < CMD_COUNT; i++) {
+        if (string_compare(argv[0], commands[i].name) == 0) {
+            commands[i].handler(argc, argv);
+            return;
+        }
+    }
+
+    uart_send("ERR 01\n");
 }
