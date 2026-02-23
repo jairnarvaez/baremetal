@@ -1,4 +1,5 @@
 #include "command_router.h"
+#include "display.h"
 #include "gpio.h"
 #include "uart.h"
 #include "utils.h"
@@ -83,6 +84,41 @@ static void handle_clear(int argc, char** argv)
     uart_send("\033[2J\033[H");
 }
 
+static void handle_display(int argc, char** argv)
+{
+    char* action = argv[1];
+
+    if (string_compare(action, "I") == 0) {
+        display_init(60);
+
+    } else if (string_compare(action, "W") == 0) {
+        if (argc != 7) {
+            uart_send("ERR 02\n");
+            return;
+        }
+        uint8_t rows[5];
+        for (int i = 0; i < 5; i++)
+            rows[i] = (uint8_t)binary_str_to_int(argv[2 + i]);
+        display(rows);
+
+    } else if (string_compare(action, "C") == 0) {
+        display_clear();
+
+    } else if (string_compare(action, "P") == 0) {
+        if (argc != 5) {
+            uart_send("ERR 02\n");
+            return;
+        }
+        display_set_pixel(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]));
+
+    } else {
+        uart_send("ERR 01\n");
+        return;
+    }
+
+    uart_send("OK\n");
+}
+
 typedef void (*handler_fn)(int argc, char** argv);
 
 typedef struct {
@@ -93,7 +129,7 @@ typedef struct {
 static const command_t commands[] = {
     { "GPIO", handle_gpio },
     { "CLEAR", handle_clear },
-    // { "I2C",    handle_i2c    },
+    { "DISPLAY", handle_display },
     // { "GPIOTE", handle_gpiote },
 };
 
