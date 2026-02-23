@@ -2,6 +2,7 @@
 #include "display.h"
 #include "error.h"
 #include "gpio.h"
+#include "reset.h"
 #include "uart.h"
 #include "utils.h"
 
@@ -121,6 +122,13 @@ static void handle_clear(int argc, char** argv)
     uart_send("\033[2J\033[H");
 }
 
+static void handle_reset(int argc, char** argv)
+{
+    (void)argc;
+    (void)argv;
+    baremetal_reset();
+}
+
 typedef void (*handler_fn)(int argc, char** argv);
 
 typedef struct {
@@ -132,6 +140,7 @@ static const command_t commands[] = {
     { "GPIO", handle_gpio },
     { "DISPLAY", handle_display },
     { "CLEAR", handle_clear },
+    { "RESET", handle_reset },
     // { "GPIOTE",  handle_gpiote  },
 };
 
