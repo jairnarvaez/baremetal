@@ -185,3 +185,13 @@ int atoi(const char* s)
     }
     return result * sign;
 }
+
+int binary_str_to_int(const char* str)
+{
+    int result = 0;
+    while (*str == '0' || *str == '1') {
+        result = (result << 1) | (*str - '0');
+        str++;
+    }
+    return result;
+}

@@ -15,5 +15,6 @@ int concat_string(char* dest, size_t dest_size, const char* src);
 int string_compare(const char* s1, const char* s2);
 int vsconcat_strings(char* dest, size_t dest_size, const char* first, va_list args);
 int atoi(const char* s);
+int binary_str_to_int(const char* str);
 
 #endif
