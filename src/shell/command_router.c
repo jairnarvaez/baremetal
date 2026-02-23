@@ -1,5 +1,6 @@
 #include "command_router.h"
 #include "display.h"
+#include "error.h"
 #include "gpio.h"
 #include "uart.h"
 #include "utils.h"
@@ -36,7 +37,7 @@ static int parse_line(char* line, char** argv, int max_args)
 static void handle_gpio(int argc, char** argv)
 {
     if (argc < 4) {
-        uart_send("ERR 02\n");
+        uart_send(ERR_INVALID_ARGS);
         return;
     }
 
@@ -45,7 +46,7 @@ static void handle_gpio(int argc, char** argv)
 
     volatile struct _gpio* port = get_port(port_num);
     if (!port || pin > MAX_PIN) {
-        uart_send("ERR 05\n");
+        uart_send(ERR_INVALID_PIN);
         return;
     }
 
@@ -53,35 +54,29 @@ static void handle_gpio(int argc, char** argv)
 
     if (string_compare(action, "O") == 0) {
         GPIO_Output(port, pin);
-        uart_send("OK\n");
 
     } else if (string_compare(action, "I") == 0) {
         GPIO_Input(port, pin, GPIO_PULL_DISABLED);
-        uart_send("OK\n");
 
     } else if (string_compare(action, "W") == 0) {
         if (argc < 5) {
-            uart_send("ERR 02\n");
+            uart_send(ERR_INVALID_ARGS);
             return;
         }
         int val = atoi(argv[4]);
         GPIO_Write(port, pin, val ? GPIO_PIN_HIGH : GPIO_PIN_LOW);
-        uart_send("OK\n");
 
     } else if (string_compare(action, "R") == 0) {
         uint32_t val = GPIO_Read(port, pin);
         uart_send("OK %lu\n", val);
+        return;
 
     } else {
-        uart_send("ERR 01\n");
+        uart_send(ERR_UNKNOWN_CMD);
+        return;
     }
-}
 
-static void handle_clear(int argc, char** argv)
-{
-    (void)argc;
-    (void)argv;
-    uart_send("\033[2J\033[H");
+    uart_send("OK\n");
 }
 
 static void handle_display(int argc, char** argv)
@@ -93,7 +88,7 @@ static void handle_display(int argc, char** argv)
 
     } else if (string_compare(action, "W") == 0) {
         if (argc != 7) {
-            uart_send("ERR 02\n");
+            uart_send(ERR_INVALID_ARGS);
             return;
         }
         uint8_t rows[5];
@@ -106,17 +101,24 @@ static void handle_display(int argc, char** argv)
 
     } else if (string_compare(action, "P") == 0) {
         if (argc != 5) {
-            uart_send("ERR 02\n");
+            uart_send(ERR_INVALID_ARGS);
             return;
         }
         display_set_pixel(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]));
 
     } else {
-        uart_send("ERR 01\n");
+        uart_send(ERR_UNKNOWN_CMD);
         return;
     }
 
     uart_send("OK\n");
+}
+
+static void handle_clear(int argc, char** argv)
+{
+    (void)argc;
+    (void)argv;
+    uart_send("\033[2J\033[H");
 }
 
 typedef void (*handler_fn)(int argc, char** argv);
@@ -128,9 +130,9 @@ typedef struct {
 
 static const command_t commands[] = {
     { "GPIO", handle_gpio },
-    { "CLEAR", handle_clear },
     { "DISPLAY", handle_display },
-    // { "GPIOTE", handle_gpiote },
+    { "CLEAR", handle_clear },
+    // { "GPIOTE",  handle_gpiote  },
 };
 
 #define CMD_COUNT (sizeof(commands) / sizeof(commands[0]))
@@ -150,5 +152,5 @@ void router_process(char* line)
         }
     }
 
-    uart_send("ERR 01\n");
+    uart_send(ERR_UNKNOWN_CMD);
 }
