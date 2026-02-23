@@ -1,4 +1,3 @@
-#include "test_echo.h"
 #include "ppi.h"
 #include "uart.h"
 

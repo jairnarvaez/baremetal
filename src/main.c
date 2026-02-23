@@ -1,8 +1,5 @@
 #include "power.h"
-#include "test_delay.h"
-#include "test_gpiote.h"
-#include "test_lsm303.h"
-#include "test_uart.h"
+#include "test.h"
 
 #define TOTAL_TESTS 4
 #define DEFAULT_TEST 1
