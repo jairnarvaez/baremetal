@@ -14,3 +14,7 @@ compile_commands.json
 clang-crash-*
 
 build/
+
+__pycache__/
+*.pyc
+*.pyo
