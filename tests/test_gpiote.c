@@ -1,4 +1,3 @@
-#include "test_gpiote.h"
 #include "animations.h"
 #include "buttons.h"
 #include "display.h"

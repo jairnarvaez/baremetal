@@ -1,4 +1,3 @@
-#include "test_ppi.h"
 #include "display.h"
 #include "gpiote.h"
 #include "ppi.h"
