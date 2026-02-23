@@ -1,20 +1,25 @@
 FLASH_SIZE = 524288
 RAM_SIZE = 131072
-
 CC = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 SIZE = arm-none-eabi-size
-
 CPU = -mcpu=cortex-m4 -mthumb
 CFLAGS = -O -g -Wall -ffreestanding
-
 BUILD_DIR = build
 
-SRC_DIRS = src drivers/src apps tests
-SRCS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c))
-INCLUDE_DIRS = src drivers/inc apps tests
-INCLUDES = $(addprefix -I, $(INCLUDE_DIRS))
+TEST ?= 0
 
+ifeq ($(TEST), 1)
+    SRC_DIRS = src drivers/src src/shell apps tests
+    INCLUDE_DIRS = src drivers/inc src/shell apps tests
+    CFLAGS += -DTEST
+else
+    SRC_DIRS = src drivers/src src/shell apps
+    INCLUDE_DIRS = src drivers/inc src/shell apps
+endif
+
+SRCS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c))
+INCLUDES = $(addprefix -I, $(INCLUDE_DIRS))
 OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
 
 all: $(BUILD_DIR)/main.hex
