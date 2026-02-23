@@ -76,6 +76,13 @@ static void handle_gpio(int argc, char** argv)
     }
 }
 
+static void handle_clear(int argc, char** argv)
+{
+    (void)argc;
+    (void)argv;
+    uart_send("\033[2J\033[H");
+}
+
 typedef void (*handler_fn)(int argc, char** argv);
 
 typedef struct {
@@ -85,6 +92,7 @@ typedef struct {
 
 static const command_t commands[] = {
     { "GPIO", handle_gpio },
+    { "CLEAR", handle_clear },
     // { "I2C",    handle_i2c    },
     // { "GPIOTE", handle_gpiote },
 };
